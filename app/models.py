@@ -323,12 +323,21 @@ class modifierBase(models.Model):
     value = NamedIntegerField("Modifier Value")
 
 class modifierAttribute(modifierBase):
+    def __str__(self):
+        return "{} [{}]".format(self.attribute, self.value)
+
     attribute = SingleChoiceField("Attribute", ATTRIBUTES)
 
 class modifierAbility(modifierBase):
+    def __str__(self):
+        return "{} [{}]".format(self.ability, self.value)
+
     ability = SingleChoiceField("Ability", ABILITIES)
 
 class modifierStatic(modifierBase):
+    def __str__(self):
+        return "{} [{}]".format(self.static, self.value)
+
     static = SingleChoiceField("Static", STATICS)
 
 #==============================================================================#
@@ -337,6 +346,9 @@ class modifierStatic(modifierBase):
 class itemBase(models.Model):
     class Meta:
         abstract = True
+
+    def __str__(self):
+        return self.name
 
     name = NameField()
     description = DescriptionField()
@@ -384,6 +396,9 @@ class itemArmor(itemBase):
 #----------------------------------- CHARMS -----------------------------------#
 #==============================================================================#
 class charm(models.Model):
+    def __str__(self):
+        return self.name
+
     name = NameField()
     description = DescriptionField()
     modifierAttribute = NamedManyToManyField("Attribute Modifiers", modifierAttribute)
@@ -395,21 +410,27 @@ class charm(models.Model):
 #----------------------------------- MERITS -----------------------------------#
 #==============================================================================#
 class merit(models.Model):
+    def __str__(self):
+        return self.name
+
     name = NameField()
     description = DescriptionField()
     dots = DotField("Dots")
-    # modifierAttribute
-    # modifierAbility
-    # modifierStatic
-    # rollConfiguration
+    modifierAttribute = NamedManyToManyField("Attribute Modifiers", modifierAttribute)
+    modifierAbility = NamedManyToManyField("Abilities Modifiers", modifierAbility)
+    modifierStatic = NamedManyToManyField("Statics Modifiers", modifierStatic)
+    rollConfiguration = NamedManyToManyField("Roll Configurations", rollConfiguration)
 
 #==============================================================================#
 #-------------------------------- SPECIALITIES --------------------------------#
 #==============================================================================#
 class speciality(models.Model):
+    def __str__(self):
+        return "[{}] {}".format(self.ability, self.name)
+
     modifier = 2
     name = NameField()
-    # ability
+    ability = SingleChoiceField("Ability", ABILITIES)
 
 #==============================================================================#
 #--------------------------------- INTIMACIES ---------------------------------#
@@ -418,13 +439,14 @@ class intimacyBase(models.Model):
     class Meta:
         abstract = True
 
+    def __str__(self):
+        return "[{}] {}".format(self.description, self.intensity)
+
     description = DescriptionField()
     intensity = SingleChoiceField("Intensity", INTENSITIES)
-    pass
 
 class intimacyTie(intimacyBase):
     target = NamedCharField("Target")
-    pass
 
 class intimacyPrincipal(intimacyBase):
     pass
@@ -435,6 +457,9 @@ class intimacyPrincipal(intimacyBase):
 class characterBase(models.Model):
     class Meta:
         abstract = True
+
+    def __str__(self):
+        return self.name
 
     #============ GENERAL =============#
     name = NameField()
