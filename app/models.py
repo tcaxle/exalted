@@ -1,4 +1,5 @@
 from django.db import models
+import multiselectfield
 
 #==============================================================================#
 #-------------------------------- OPTION LISTS --------------------------------#
@@ -87,7 +88,7 @@ CATEGORIES = [
     ("H", "Heavy"),
 ]
 
-TAGS_WEAPON = [
+TAGS_WEAPONS = [
     (
         "General", (
             ("ONE HANDED", "One Handed"),
@@ -181,6 +182,14 @@ class SingleChoiceField(models.CharField):
         kwargs['max_length'] = 100
         super().__init__(*args, **kwargs)
 
+class MultiChoiceField(multiselectfield.MultiSelectField):
+    def __init__(self, verbose_name, choices, *args, **kwargs):
+        kwargs['verbose_name'] = verbose_name
+        kwargs['choices'] = choices
+        kwargs['blank'] = True
+        kwargs['max_length'] = 100
+        super().__init__(*args, **kwargs)
+
 class NamedIntegerField(models.IntegerField):
     def __init__(self, verbose_name, desc=None, *args, **kwargs):
         kwargs['verbose_name'] = verbose_name
@@ -195,6 +204,7 @@ class NamedCharField(models.CharField):
         kwargs['blank'] = False
         kwargs['max_length'] = 100
         super().__init__(*args, **kwargs)
+
 
 #==============================================================================#
 #--------------------------------- MODIFIERS ----------------------------------#
@@ -233,8 +243,8 @@ class itemWeaponBase(itemBase):
     class Meta:
         abstract = True
 
-    # category
-    # tags
+    category = SingleChoiceField("Category", CATEGORIES)
+    tags = MultiChoiceField("Tags", TAGS_WEAPONS)
     accuracy = NamedIntegerField("Accuracy")
     damage = NamedIntegerField("Damage")
     defense = NamedIntegerField("Defense")
