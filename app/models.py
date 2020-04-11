@@ -5,21 +5,21 @@ from django.db import models
 #==============================================================================#
 ATTRIBUTES = [
     (
-        "Physical" (
+        "Physical", (
             ("STR", "Srength"),
             ("DEX", "Dexterity"),
             ("STA", "Stamina"),
         ),
     ),
     (
-        "Social" (
+        "Social", (
             ("CHA", "Charisma"),
             ("MAN", "Manipulation"),
             ("APP", "Appearance"),
         ),
     ),
     (
-        "Mental" (
+        "Mental", (
             ("PER", "Perception"),
             ("INT", "Intelligence"),
             ("WIT", "Wits"),
@@ -29,7 +29,7 @@ ATTRIBUTES = [
 
 ABILITIES = [
     (
-        "War" (
+        "War", (
             ("ARCHERY", "Archery"),
             ("ATHLETICS", "Athletics"),
             ("AWARENESS", "Awareness"),
@@ -43,7 +43,7 @@ ABILITIES = [
         ),
     ),
     (
-        "Life" (
+        "Life", (
             ("CRAFT", "Craft"),
             ("LARCENY", "Larceny"),
             ("LINGUISTICS", "Linguistics"),
@@ -57,7 +57,7 @@ ABILITIES = [
         ),
     ),
     (
-        "Wisdom" (
+        "Wisdom", (
             ("BUREAUCRACY", "Bureaucracy"),
             ("INVESTIGATION", "Investigation"),
             ("LORE", "Lore"),
@@ -89,7 +89,7 @@ CATEGORIES = [
 
 TAGS_WEAPON = [
     (
-        "General" (
+        "General", (
             ("ONE HANDED", "One Handed"),
             ("TWO HANDED", "Two Handed"),
             ("BASHING", "Bashing"),
@@ -101,7 +101,7 @@ TAGS_WEAPON = [
         ),
     ),
     (
-        "Melee" (
+        "Melee", (
             ("MELEE", "Melee"),
             ("BALANCED", "Balanced"),
             ("BRAWL", "Brawl"),
@@ -119,7 +119,7 @@ TAGS_WEAPON = [
         ),
     ),
     (
-        "Thrown" (
+        "Thrown", (
             ("THROWN", "Occult"),
             ("CUTTING", "Cutting"),
             ("POISONABLE", "Poisonable"),
@@ -127,7 +127,7 @@ TAGS_WEAPON = [
         ),
     ),
     (
-        "Archery" (
+        "Archery", (
             ("ARCHERY", "Archery"),
             ("CROSSBOW", "Crossbow"),
             ("FLAME", "Flame"),
@@ -208,7 +208,7 @@ class modifierAttribute(modifierBase):
     attribute = SingleChoiceField("Attribute", ATTRIBUTES)
 
 class modifierAbility(modifierBase):
-    ability = SingleChoiceField("Ability", ABIILITIES)
+    ability = SingleChoiceField("Ability", ABILITIES)
 
 class modifierStatic(modifierBase):
     static = SingleChoiceField("Static", STATICS)
