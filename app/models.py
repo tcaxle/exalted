@@ -3,12 +3,146 @@ from django.db import models
 #==============================================================================#
 #-------------------------------- OPTION LISTS --------------------------------#
 #==============================================================================#
-ATTRIBUTES = []
-ABILITIES = []
-STATICS = []
-CATEGORIES = []
-TAGS_WEAPON = []
-TAGS_ARMOR = []
+ATTRIBUTES = [
+    (
+        "Physical" (
+            ("STR", "Srength"),
+            ("DEX", "Dexterity"),
+            ("STA", "Stamina"),
+        ),
+    ),
+    (
+        "Social" (
+            ("CHA", "Charisma"),
+            ("MAN", "Manipulation"),
+            ("APP", "Appearance"),
+        ),
+    ),
+    (
+        "Mental" (
+            ("PER", "Perception"),
+            ("INT", "Intelligence"),
+            ("WIT", "Wits"),
+        ),
+    ),
+]
+
+ABILITIES = [
+    (
+        "War" (
+            ("ARCHERY", "Archery"),
+            ("ATHLETICS", "Athletics"),
+            ("AWARENESS", "Awareness"),
+            ("BRAWL", "Brawl"),
+            ("DODGE", "Dodge"),
+            ("INTEGRITY", "Integrity"),
+            ("MELEE", "Melee"),
+            ("RESISTANCE", "Resistance"),
+            ("THROWN", "Thrown"),
+            ("WAR", "War"),
+        ),
+    ),
+    (
+        "Life" (
+            ("CRAFT", "Craft"),
+            ("LARCENY", "Larceny"),
+            ("LINGUISTICS", "Linguistics"),
+            ("PERFORMANCE", "Performance"),
+            ("PRESENCE", "Presence"),
+            ("RIDE", "Ride"),
+            ("SAIL", "Sail"),
+            ("SOCIALISE", "Socialise"),
+            ("STEALTH", "Stealth"),
+            ("SURVIVAL", "Survival"),
+        ),
+    ),
+    (
+        "Wisdom" (
+            ("BUREAUCRACY", "Bureaucracy"),
+            ("INVESTIGATION", "Investigation"),
+            ("LORE", "Lore"),
+            ("MEDICINE", "Medicine"),
+            ("OCCULT", "Occult"),
+        ),
+    ),
+]
+
+STATICS = [
+    ("SOAK NATURAL", "Natural Soak"),
+    ("SOAK ARMORED", "Armored Soak"),
+    ("SOAK TOTAL", "Total Soak"),
+    ("HARDNESS", "Hardness"),
+    ("PARRY", "Parry"),
+    ("EVASION", "Evasion"),
+    ("RESOLVE", "Resolve"),
+    ("GUILE", "Guile"),
+    ("RUSH", "Rush"),
+    ("DISENGAGE", "Disengage"),
+    ("JOIN BATTLE", "Join Battle"),
+]
+
+CATEGORIES = [
+    ("L", "Light"),
+    ("M", "Medium"),
+    ("H", "Heavy"),
+]
+
+TAGS_WEAPON = [
+    (
+        "General" (
+            ("ONE HANDED", "One Handed"),
+            ("TWO HANDED", "Two Handed"),
+            ("BASHING", "Bashing"),
+            ("CONCEALABLE", "Concealable"),
+            ("LETHAL", "Lethal"),
+            ("MOUNTED", "Mounted"),
+            ("PIERCING", "Piercing"),
+            ("SPECIAL", "Special"),
+        ),
+    ),
+    (
+        "Melee" (
+            ("MELEE", "Melee"),
+            ("BALANCED", "Balanced"),
+            ("BRAWL", "Brawl"),
+            ("CHOPPING", "Chopping"),
+            ("DISARMING", "Disarming"),
+            ("FLEXIBLE", "Flexible"),
+            ("IMPROVISED", "Improvised"),
+            ("GRAPPLING", "Grappling"),
+            ("MARTIAL ARTS", "Martial Arts"),
+            ("NATURAL", "Natural"),
+            ("REACHING", "Reaching"),
+            ("SHIELD", "Shield"),
+            ("SMASHING", "Smashing"),
+            ("WORN", "Worn"),
+        ),
+    ),
+    (
+        "Thrown" (
+            ("THROWN", "Occult"),
+            ("CUTTING", "Cutting"),
+            ("POISONABLE", "Poisonable"),
+            ("SUBTLE", "Subtle"),
+        ),
+    ),
+    (
+        "Archery" (
+            ("ARCHERY", "Archery"),
+            ("CROSSBOW", "Crossbow"),
+            ("FLAME", "Flame"),
+            ("POWERFUL", "Powerful"),
+            ("SLOW", "Slow"),
+        ),
+    ),
+]
+
+TAGS_ARMOR = [
+    ("BUOYANT", "Buoyant"),
+    ("CONCEALABLE", "Concealable"),
+    ("SILENT", "Silent"),
+]
+
 INTENSITIES = [
     ("MINOR", "Minor"),
     ("MAJOR", "Major"),
