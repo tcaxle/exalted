@@ -229,6 +229,28 @@ class DieField(multiselectfield.MultiSelectField):
         kwargs['number'] = self.number
         return name, path, args, kwargs
 
+class NamedForeignKey(models.ForeignKey):
+    def __init__(self, verbose_name, *args, **kwargs):
+        kwargs['verbose_name'] = verbose_name
+        kwargs['on_delete'] = models.CASCADE
+        kwargs['blank'] = True
+        kwargs['null'] = True
+        super().__init__(*args, **kwargs)
+
+class NamedManyToManyField(models.ManyToManyField):
+    def __init__(self, verbose_name, *args, **kwargs):
+        kwargs['verbose_name'] = verbose_name
+        kwargs['blank'] = True
+        super().__init__(*args, **kwargs)
+
+class NamedOneToOneField(models.OneToOneField):
+    def __init__(self, verbose_name, *args, **kwargs):
+        kwargs['verbose_name'] = verbose_name
+        kwargs['on_delete'] = models.CASCADE
+        kwargs['blank'] = True
+        kwargs['null'] = True
+        super().__init__(*args, **kwargs)
+
 #==============================================================================#
 #-------------------------------- DICE ROLLING --------------------------------#
 #==============================================================================#
@@ -364,10 +386,10 @@ class itemArmor(itemBase):
 class charm(models.Model):
     name = NameField()
     description = DescriptionField()
-    # modifierAttribute
-    # modifierAbility
-    # modifierStatic
-    # rollConfiguration
+    modifierAttribute = NamedManyToManyField("Attribute Modifiers", modifierAttribute)
+    modifierAbility = NamedManyToManyField("Abilities Modifiers", modifierAbility)
+    modifierStatic = NamedManyToManyField("Statics Modifiers", modifierStatic)
+    rollConfiguration = NamedManyToManyField("Roll Configurations", rollConfiguration)
 
 #==============================================================================#
 #----------------------------------- MERITS -----------------------------------#
