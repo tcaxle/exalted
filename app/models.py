@@ -257,10 +257,7 @@ class rollConfiguration(models.Model):
             self.r09,
             self.r10,
         ]
-        listSuccess = []
-        listDouble = []
-        listExplodingDisappearing = []
-        listSubtracting = []
+        listSuccess, listDouble, listExplodingDisappearing, listSubtracting = [], [], [], []
         for die in listDice:
             if "SUCCESS" in die:
                 listSuccess.append(die.number)
