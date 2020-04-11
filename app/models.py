@@ -265,8 +265,8 @@ class itemWeaponRanged(itemWeaponBase):
 #----------------------------------- ARMOR ------------------------------------#
 #==============================================================================#
 class itemArmor(itemBase):
-    # category
-    # tags
+    category = SingleChoiceField("Category", CATEGORIES)
+    tags = MultiChoiceField("Tags", TAGS_ARMOR)
     soak = NamedIntegerField("Soak")
     hardness = NamedIntegerField("Hardness")
     mobilityPenalty = NamedIntegerField("Mobility Penalty")
