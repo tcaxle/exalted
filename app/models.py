@@ -205,16 +205,13 @@ class modifierBase(models.Model):
     value = NamedIntegerField("Modifier Value")
 
 class modifierAttribute(modifierBase):
-    # attribute
-    pass
+    attribute = SingleChoiceField("Attribute", ATTRIBUTES)
 
 class modifierAbility(modifierBase):
-    # ability
-    pass
+    ability = SingleChoiceField("Ability", ABIILITIES)
 
 class modifierStatic(modifierBase):
-    # static
-    pass
+    static = SingleChoiceField("Static", STATICS)
 
 #==============================================================================#
 #----------------------------------- ITEMS ------------------------------------#
