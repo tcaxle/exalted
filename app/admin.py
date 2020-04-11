@@ -1,6 +1,8 @@
 from django.contrib import admin
 from .models import *
 
+admin.site.register(rollConfiguration)
+
 admin.site.register(modifierAttribute)
 admin.site.register(modifierAbility)
 admin.site.register(modifierStatic)
