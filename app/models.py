@@ -620,12 +620,18 @@ class characterExaltBase(characterBase):
         abstract = True
 
     #============= MOTES ==============#
+    motesPersonalMax = NamedIntegerField("Maximum Personal Motes")
+    motesPersonal = NamedIntegerField("Current Personal Motes")
+    motesPeripheralMax = NamedIntegerField("Maximum Peripheral Motes")
+    motesPeripheral = NamedIntegerField("Current Peripheral Motes")
 
     #============= LIMIT ==============#
+    limitTrigger = models.TextField(verbose_name="Limit Trigger", blank="False", max_length=1000)
+    limitBreak = NamedIntegerField("Limit Break")
 
     #======= EXALTED EXPERIENCE =======#
-
-    pass
+    experienceExaltedTotal = NamedIntegerField("Total Experience")
+    experienceExalted = NamedIntegerField("Current Experience")
 
 class characterExaltSolar(characterExaltBase):
 
@@ -643,6 +649,8 @@ class characterExaltLunar(characterExaltBase):
     attributeFavored = MultiChoiceField("Favoured Attributes", ATTRIBUTES)
 
     #========= SHAPESHIFTING ==========#
+    # Reverse relation
+    # .charmLunarShape_set.all()
 
     #============= CHARMS =============#
     # Reverse relation
@@ -767,6 +775,10 @@ class charmSolar(charmBase):
 
 class charmLunar(charmBase):
     attribute = SingleChoiceField("Key Attribute", ATTRIBUTES)
+    character = NamedForeignKeyField("Character", characterExaltLunar)
+
+class charmLunarShape(charmBase):
+    description = DescriptionField()
     character = NamedForeignKeyField("Character", characterExaltLunar)
 
 #==============================================================================#
