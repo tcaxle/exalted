@@ -155,8 +155,7 @@ DIE_TYPES = [
     ("NONE", "None"),
     ("SUCCESS", "Success"),
     ("DOUBLE", "Double"),
-    ("EXPLODING", "Exploding"),
-    ("DISAPPEARING", "Disappearing"),
+    ("EXPLODING_DISAPPEARING", "Exploding / Disappearing"),
     ("SUBTRACTING", "Subtracting")
 ]
 
@@ -215,7 +214,7 @@ class NamedCharField(models.CharField):
         kwargs['max_length'] = 100
         super().__init__(*args, **kwargs)
 
-class DieField(models.CharField):
+class DieField(multiselectfield.MultiSelectField):
     def __init__(self, verbose_name, number, default, *args, **kwargs):
         self.number = number
         kwargs['verbose_name'] = verbose_name
@@ -234,18 +233,18 @@ class DieField(models.CharField):
 #-------------------------------- DICE ROLLING --------------------------------#
 #==============================================================================#
 class rollConfiguration(models.Model):
-    r01 = DieField("1s", 1, "NONE")
-    r02 = DieField("2s", 2, "NONE")
-    r03 = DieField("3s", 3, "NONE")
-    r04 = DieField("4s", 4, "NONE")
-    r05 = DieField("5s", 5, "NONE")
-    r06 = DieField("6s", 6, "NONE")
-    r07 = DieField("7s", 7, "SUCCESS")
-    r08 = DieField("8s", 8, "SUCCESS")
-    r09 = DieField("9s", 9, "SUCCESS")
-    r10 = DieField("10s", 10, "DOUBLE")
+    r01 = DieField("1s", 1, ["NONE"])
+    r02 = DieField("2s", 2, ["NONE"])
+    r03 = DieField("3s", 3, ["NONE"])
+    r04 = DieField("4s", 4, ["NONE"])
+    r05 = DieField("5s", 5, ["NONE"])
+    r06 = DieField("6s", 6, ["NONE"])
+    r07 = DieField("7s", 7, ["SUCCESS"])
+    r08 = DieField("8s", 8, ["SUCCESS"])
+    r09 = DieField("9s", 9, ["SUCCESS"])
+    r10 = DieField("10s", 10, ["SUCCESS", "DOUBLE"])
 
-    def listDice(self):
+    def roll(self, pool=1):
         listDice = [
             self.r01,
             self.r02,
@@ -260,24 +259,17 @@ class rollConfiguration(models.Model):
         ]
         listSuccess = []
         listDouble = []
-        listExploding = []
-        listDisappearing = []
+        listExplodingDisappearing = []
         listSubtracting = []
         for die in listDice:
-            if die == "SUCCESS":
+            if "SUCCESS" in die:
                 listSuccess.append(die.number)
-            elif die == "DOUBLE":
+            if "DOUBLE" in die:
                 listDouble.append(die.number)
-            elif die == "EXPLODING":
-                listExploding.append(die.number)
-            elif die == "DISAPPEARING":
-                listDisappearing.append(die.number)
-            elif die == "SUBTRACTING":
+            if "EXPLODING_DISAPPEARING" in die:
+                listExplodingDisappearing.append(die.number)
+            if "SUBTRACTING" in die:
                 listSubtracting.append(die.number)
-        return listSuccess, listDouble, listExploding, listDisappearing, listSubtracting
-
-    def roll(self, pool=1):
-        listSuccess, listDouble, listExploding, listDisappearing, listSubtracting = self.listDice()
         successes = 0
         listExploded, listDisappeared = [], []
         listRoll = [0 for die in range(pool)]
@@ -285,26 +277,23 @@ class rollConfiguration(models.Model):
             for die in listRoll:
                 if die == 0:
                     die = randint(1, 10)
-                if die in listExploding:
-                    listExploded.append(die)
-                    die = 0
-                if die in listDisappearing:
-                    listDisappeared.append(die)
+                if die in listExplodingDisappearing:
+                    if die in listSuccess:
+                        listExploded.append(die)
+                    else:
+                        listDisappeared.append(die)
                     die = 0
         for die in listRoll + listExploded:
             if die in listSuccess:
                 successes += 1
-            elif die in listDouble:
-                successes += 2
-            elif die in listSubtracting:
+            if die in listDouble:
+                successes += 1
+            if die in listSubtracting:
                 successes -= 1
         if successes < 0:
             successes = 0
         botch = (successes == 0) and (1 in listRoll)
         return successes, botch, listRoll, listExploded, listDisappeared
-
-
-
 
 #==============================================================================#
 #--------------------------------- MODIFIERS ----------------------------------#
