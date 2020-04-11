@@ -12,7 +12,8 @@ admin.site.register(itemWeaponMelee)
 admin.site.register(itemWeaponRanged)
 admin.site.register(itemArmor)
 
-admin.site.register(charm)
+admin.site.register(charmSolar)
+admin.site.register(charmLunar)
 
 admin.site.register(merit)
 

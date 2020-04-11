@@ -589,15 +589,20 @@ class itemArmor(itemBase):
 #==============================================================================#
 #----------------------------------- CHARMS -----------------------------------#
 #==============================================================================#
-class charm(models.Model):
+class charmBase(models.Model):
+    class Meta:
+        abstract = True
+
     def __str__(self):
         return self.name
 
     name = NameField()
     description = DescriptionField()
-    rollConfiguration = NamedManyToManyField("Roll Configurations", rollConfiguration)
+    levelEssence = NamedIntegerField("Essence Level")
+    levelKey = NamedIntegerField("Key Level")
     character = NamedForeignKeyField("Character", characterBase)
     active = NamedBooleanField("Active?")
+    rollConfiguration = NamedManyToManyField("Roll Configurations", rollConfiguration)
     modifierAttribute = NamedManyToManyField("Attribute Modifiers", modifierAttribute)
     modifierAbility = NamedManyToManyField("Abilities Modifiers", modifierAbility)
     modifierStatic = NamedManyToManyField("Statics Modifiers", modifierStatic)
@@ -613,6 +618,12 @@ class charm(models.Model):
             if keyword == modifierStatic.static:
                 output += modifierStatic.value
         return
+
+class charmSolar(charmBase):
+    ability = SingleChoiceField("Key Ability", ABILITIES)
+
+class charmLunar(charmBase):
+    attribute = SingleChoiceField("Key Attribute", ATTRIBUTES)
 
 #==============================================================================#
 #----------------------------------- MERITS -----------------------------------#
