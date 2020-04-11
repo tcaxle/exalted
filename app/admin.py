@@ -21,6 +21,6 @@ admin.site.register(speciality)
 admin.site.register(intimacyTie)
 admin.site.register(intimacyPrincipal)
 
-admin.site.register(characterMortal)
+admin.site.register(characterBase)
 admin.site.register(characterExaltSolar)
 admin.site.register(characterExaltLunar)

@@ -1,6 +1,7 @@
 from django.db import models
 import multiselectfield
 from random import randint
+from math import ceil
 
 #==============================================================================#
 #-------------------------------- OPTION LISTS --------------------------------#
@@ -229,7 +230,14 @@ class DieField(multiselectfield.MultiSelectField):
         kwargs['number'] = self.number
         return name, path, args, kwargs
 
-class NamedForeignKey(models.ForeignKey):
+class NamedBooleanField(models.BooleanField):
+    def __init__(self, verbose_name, default=False, *args, **kwargs):
+        kwargs['verbose_name'] = verbose_name
+        kwargs['default'] = default
+        kwargs['blank'] = False
+        super().__init__(*args, **kwargs)
+
+class NamedForeignKeyField(models.ForeignKey):
     def __init__(self, verbose_name, *args, **kwargs):
         kwargs['verbose_name'] = verbose_name
         kwargs['on_delete'] = models.CASCADE
@@ -341,123 +349,9 @@ class modifierStatic(modifierBase):
     static = SingleChoiceField("Static", STATICS)
 
 #==============================================================================#
-#----------------------------------- ITEMS ------------------------------------#
-#==============================================================================#
-class itemBase(models.Model):
-    class Meta:
-        abstract = True
-
-    def __str__(self):
-        return self.name
-
-    name = NameField()
-    description = DescriptionField()
-
-class item(itemBase):
-    pass
-
-#==============================================================================#
-#---------------------------------- WEAPONS -----------------------------------#
-#==============================================================================#
-class itemWeaponBase(itemBase):
-    class Meta:
-        abstract = True
-
-    category = SingleChoiceField("Category", CATEGORIES)
-    tags = MultiChoiceField("Tags", TAGS_WEAPONS)
-    accuracy = NamedIntegerField("Accuracy")
-    damage = NamedIntegerField("Damage")
-    defense = NamedIntegerField("Defense")
-    overwhelming = NamedIntegerField("Overwhelming")
-    attunement = NamedIntegerField("Attunement")
-
-class itemWeaponMelee(itemWeaponBase):
-    pass
-
-class itemWeaponRanged(itemWeaponBase):
-    rangeClose = NamedIntegerField("Close Range")
-    rangeShort = NamedIntegerField("Short Range")
-    rangeMedium = NamedIntegerField("Medium Range")
-    rangeLong = NamedIntegerField("Long Range")
-    rangeExtreme = NamedIntegerField("Extreme Range")
-
-#==============================================================================#
-#----------------------------------- ARMOR ------------------------------------#
-#==============================================================================#
-class itemArmor(itemBase):
-    category = SingleChoiceField("Category", CATEGORIES)
-    tags = MultiChoiceField("Tags", TAGS_ARMOR)
-    soak = NamedIntegerField("Soak")
-    hardness = NamedIntegerField("Hardness")
-    mobilityPenalty = NamedIntegerField("Mobility Penalty")
-    attunement = NamedIntegerField("Attunement")
-
-#==============================================================================#
-#----------------------------------- CHARMS -----------------------------------#
-#==============================================================================#
-class charm(models.Model):
-    def __str__(self):
-        return self.name
-
-    name = NameField()
-    description = DescriptionField()
-    modifierAttribute = NamedManyToManyField("Attribute Modifiers", modifierAttribute)
-    modifierAbility = NamedManyToManyField("Abilities Modifiers", modifierAbility)
-    modifierStatic = NamedManyToManyField("Statics Modifiers", modifierStatic)
-    rollConfiguration = NamedManyToManyField("Roll Configurations", rollConfiguration)
-
-#==============================================================================#
-#----------------------------------- MERITS -----------------------------------#
-#==============================================================================#
-class merit(models.Model):
-    def __str__(self):
-        return self.name
-
-    name = NameField()
-    description = DescriptionField()
-    dots = DotField("Dots")
-    modifierAttribute = NamedManyToManyField("Attribute Modifiers", modifierAttribute)
-    modifierAbility = NamedManyToManyField("Abilities Modifiers", modifierAbility)
-    modifierStatic = NamedManyToManyField("Statics Modifiers", modifierStatic)
-    rollConfiguration = NamedManyToManyField("Roll Configurations", rollConfiguration)
-
-#==============================================================================#
-#-------------------------------- SPECIALITIES --------------------------------#
-#==============================================================================#
-class speciality(models.Model):
-    def __str__(self):
-        return "[{}] {}".format(self.ability, self.name)
-
-    modifier = 2
-    name = NameField()
-    ability = SingleChoiceField("Ability", ABILITIES)
-
-#==============================================================================#
-#--------------------------------- INTIMACIES ---------------------------------#
-#==============================================================================#
-class intimacyBase(models.Model):
-    class Meta:
-        abstract = True
-
-    def __str__(self):
-        return "[{}] {}".format(self.description, self.intensity)
-
-    description = DescriptionField()
-    intensity = SingleChoiceField("Intensity", INTENSITIES)
-
-class intimacyTie(intimacyBase):
-    target = NamedCharField("Target")
-
-class intimacyPrincipal(intimacyBase):
-    pass
-
-#==============================================================================#
 #--------------------------------- CHARACTERS ---------------------------------#
 #==============================================================================#
 class characterBase(models.Model):
-    class Meta:
-        abstract = True
-
     def __str__(self):
         return self.name
 
@@ -476,7 +370,7 @@ class characterBase(models.Model):
     wits          = DotField("Wits")
 
     #=========== ABILITIES ============#
-    archey        = DotField("Archery")
+    archery        = DotField("Archery")
     athletics     = DotField("Athletics")
     awareness     = DotField("Awareness")
     brawl         = DotField("Brawl")
@@ -504,20 +398,86 @@ class characterBase(models.Model):
     war           = DotField("War")
 
     #============= MERITS =============#
+    # Reverse relation
+    # .merit_set.all()
 
     #=========== WILLPOWER ============#
+    willpowerCap = 10
+    willpowerMax = NamedIntegerField("Maximum Willpower")
+    willpower = NamedIntegerField("Current Willpower")
 
     #=========== EXPERIENCE ===========#
+    experienceTotal = NamedIntegerField("Total Experience")
+    experience = NamedIntegerField("Current Experience")
 
     #============ WEAPONS =============#
+    # Reverse relation
+    # .itemWeaponMelee_set.all()
+    # .itemWeaponRanged_set.all()
 
     #============= ARMOR ==============#
+    # Reverse relation
+    # .itemArmor_set.all()
 
     #============= ITEMS ==============#
+    # Reverse relation
+    # .item_set.all()
 
     #============= HEALTH =============#
+    health0 = NamedIntegerField("'-0' Health Levels")
+    health1 = NamedIntegerField("'-1' Health Levels")
+    health2 = NamedIntegerField("'-2' Health Levels")
+    healthIndex = NamedIntegerField("Health Track Index")
+    def healthTrack(self):
+        return ["Healthy"] + ["-0" for i in range(self.health0)] + ["-1" for i in range(self.health1)] + ["-1" for i in range(self.health1)] + ["-4", "i"]
+    def healthLevel(self):
+        return self.healthTrack()[self.healthIndex]
 
     #============ STATICS =============#
+    def resolve(self, speciality=None, mod=0):
+        if self.charmsActive():
+            mod += sum([])
+        if speciality:
+            mod += specility.modifier
+        return mod + ceil((self.wits + self.integrity) / 2)
+    def guile(self, speciality=None, mod=0):
+        if self.charmsActive():
+            mod += sum([])
+        if speciality:
+            mod += specility.modifier
+        return mod + ceil((self.manipulation + self.socialize) / 2)
+    def soakNatural(self, mod=0):
+        if self.charmsActive():
+            mod += sum([])
+        return mod + self.stamina
+    def soakArmored(self, mod=0):
+        if self.armorEquipped.all():
+            mod += sum([])
+        return mod
+    def soakTotal(self, mod=0):
+        return mod + self.soakNatural() + self.soakArmored()
+    def hardness(self, mod=0):
+        if self.armorEquipped.all():
+            mod += sum([])
+        if self.charmsActive():
+            mod += sum([])
+        return mod
+    def joinBattle(self, mod=0):
+        if self.charmsActive():
+            mod += sum([])
+        return mod + self.wits + self.awareness + 3
+    def evasion(self, mod=0):
+        if self.charmsActive():
+            mod += sum([])
+        return mod + ceil((self.dexterity + self.dodge) / 2) - sum([])
+    def rush(self, mod=0):
+        if self.charmsActive():
+            mod += sum([])
+        return mod + self.dexterity + self.athletics
+    def disengage(self, mod=0):
+        if self.charmsActive():
+            mod += sum([])
+        return mod + self.dexterity + self.dodge
 
 class characterExaltBase(characterBase):
     class Meta:
@@ -533,9 +493,6 @@ class characterExaltBase(characterBase):
 
     pass
 
-class characterMortal(characterBase):
-    pass
-
 class characterExaltSolar(characterExaltBase):
 
     #============ SUPERNAL ============#
@@ -547,3 +504,161 @@ class characterExaltLunar(characterExaltBase):
     #========= SHAPESHIFTING ==========#
 
     pass
+
+#==============================================================================#
+#----------------------------------- ITEMS ------------------------------------#
+#==============================================================================#
+class itemBase(models.Model):
+    class Meta:
+        abstract = True
+
+    def __str__(self):
+        return self.name
+
+    name = NameField()
+    description = DescriptionField()
+    character = NamedForeignKeyField("Character", characterBase)
+
+class item(itemBase):
+    pass
+
+#==============================================================================#
+#---------------------------------- WEAPONS -----------------------------------#
+#==============================================================================#
+class itemWeaponBase(itemBase):
+    class Meta:
+        abstract = True
+
+    equipped = NamedBooleanField("Equipped?")
+    category = SingleChoiceField("Category", CATEGORIES)
+    tags = MultiChoiceField("Tags", TAGS_WEAPONS)
+    accuracy = NamedIntegerField("Accuracy")
+    damage = NamedIntegerField("Damage")
+    defense = NamedIntegerField("Defense")
+    overwhelming = NamedIntegerField("Overwhelming")
+    attunement = NamedIntegerField("Attunement")
+
+class itemWeaponMelee(itemWeaponBase):
+    def attack(self, ability, mod=0, withering=True):
+        if withering:
+            return mod + ability + self.dexterity + weapon.accuracy
+        else:
+            return mod + ability + self.dexterity
+    def parry(self, ability, mod=0):
+        if self.character.charmsActive():
+            mod += sum([])
+        return mod + ceil((self.dexterity + ability) / 2) + weapon.defense
+
+class itemWeaponRanged(itemWeaponBase):
+    rangeClose = NamedIntegerField("Close Range")
+    rangeShort = NamedIntegerField("Short Range")
+    rangeMedium = NamedIntegerField("Medium Range")
+    rangeLong = NamedIntegerField("Long Range")
+    rangeExtreme = NamedIntegerField("Extreme Range")
+    def attack(self, ability, rangeBand, mod=0, withering=True):
+        rangeBand = rangeBand.lower()
+        if rangeBand == "close" or rangeBand == "c":
+            rangeModifier = self.rangeClose
+        elif rangeBand == "short" or rangeBand == "s":
+            rangeModifier = self.rangeShort
+        elif rangeBand == "medium" or rangeBand == "m":
+            rangeModifier = self.rangeMedium
+        elif rangeBand == "long" or rangeBand == "l":
+            rangeModifier = self.rangeLong
+        elif rangeBand == "extreme" or rangeBand == "e":
+            rangeModifier = self.rangeExtreme
+        else:
+            rangeModifier = 0
+        if withering:
+            return mod + rangeModifier + ability + self.dexterity + weapon.accuracy
+        else:
+            return mod + rangeModifier + ability + self.dexterity
+
+#==============================================================================#
+#----------------------------------- ARMOR ------------------------------------#
+#==============================================================================#
+class itemArmor(itemBase):
+    equipped = NamedBooleanField("Equipped?")
+    category = SingleChoiceField("Category", CATEGORIES)
+    tags = MultiChoiceField("Tags", TAGS_ARMOR)
+    soak = NamedIntegerField("Soak")
+    hardness = NamedIntegerField("Hardness")
+    mobilityPenalty = NamedIntegerField("Mobility Penalty")
+    attunement = NamedIntegerField("Attunement")
+
+#==============================================================================#
+#----------------------------------- CHARMS -----------------------------------#
+#==============================================================================#
+class charm(models.Model):
+    def __str__(self):
+        return self.name
+
+    name = NameField()
+    description = DescriptionField()
+    rollConfiguration = NamedManyToManyField("Roll Configurations", rollConfiguration)
+    character = NamedForeignKeyField("Character", characterBase)
+    active = NamedBooleanField("Active?")
+    modifierAttribute = NamedManyToManyField("Attribute Modifiers", modifierAttribute)
+    modifierAbility = NamedManyToManyField("Abilities Modifiers", modifierAbility)
+    modifierStatic = NamedManyToManyField("Statics Modifiers", modifierStatic)
+    def modifier(self, keyword):
+        output = 0
+        for modifierAttribute in self.modifierAttribute.all():
+            if keyword == modifierAttribute.attribute:
+                output += modifierAttribute.value
+        for modifierAbility in self.modifierAbility.all():
+            if keyword == modifierAbility.ability:
+                output += modifierAbility.value
+        for modifierStatic in self.modifierStatic.all():
+            if keyword == modifierStatic.static:
+                output += modifierStatic.value
+        return
+
+#==============================================================================#
+#----------------------------------- MERITS -----------------------------------#
+#==============================================================================#
+class merit(models.Model):
+    def __str__(self):
+        return self.name
+
+    name = NameField()
+    description = DescriptionField()
+    dots = DotField("Dots")
+    character = NamedForeignKeyField("Character", characterBase)
+    rollConfiguration = NamedManyToManyField("Roll Configurations", rollConfiguration)
+    modifierAttribute = NamedManyToManyField("Attribute Modifiers", modifierAttribute)
+    modifierAbility = NamedManyToManyField("Abilities Modifiers", modifierAbility)
+    modifierStatic = NamedManyToManyField("Statics Modifiers", modifierStatic)
+
+#==============================================================================#
+#-------------------------------- SPECIALITIES --------------------------------#
+#==============================================================================#
+class speciality(models.Model):
+    def __str__(self):
+        return "[{}] {}".format(self.ability, self.name)
+
+    modifier = 2
+    name = NameField()
+    ability = SingleChoiceField("Ability", ABILITIES)
+    character = NamedForeignKeyField("Character", characterBase)
+
+#==============================================================================#
+#--------------------------------- INTIMACIES ---------------------------------#
+#==============================================================================#
+class intimacyBase(models.Model):
+    class Meta:
+        abstract = True
+
+    def __str__(self):
+        return "[{}] {}".format(self.description, self.intensity)
+
+    description = DescriptionField()
+    intensity = SingleChoiceField("Intensity", INTENSITIES)
+    character = NamedForeignKeyField("Character", characterBase)
+
+class intimacyTie(intimacyBase):
+    target = NamedCharField("Target")
+
+class intimacyPrincipal(intimacyBase):
+    pass
+
