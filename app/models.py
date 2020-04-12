@@ -1,4 +1,5 @@
 from django.db import models
+from polymorphic.models import PolymorphicModel
 import multiselectfield
 from random import randint
 from math import ceil
@@ -9,23 +10,23 @@ from math import ceil
 ATTRIBUTES = [
     (
         "Physical", (
-            ("STR", "Strength"),
-            ("DEX", "Dexterity"),
-            ("STA", "Stamina"),
+            ("Strength", "Strength"),
+            ("Dexterity", "Dexterity"),
+            ("Stamina", "Stamina"),
         ),
     ),
     (
         "Social", (
-            ("CHA", "Charisma"),
-            ("MAN", "Manipulation"),
-            ("APP", "Appearance"),
+            ("Charisma", "Charisma"),
+            ("Manipulation", "Manipulation"),
+            ("Appearance", "Appearance"),
         ),
     ),
     (
         "Mental", (
-            ("PER", "Perception"),
-            ("INT", "Intelligence"),
-            ("WIT", "Wits"),
+            ("Perception", "Perception"),
+            ("Intelligence", "Intelligence"),
+            ("Wits", "Wits"),
         ),
     ),
 ]
@@ -33,131 +34,188 @@ ATTRIBUTES = [
 ABILITIES = [
     (
         "War", (
-            ("ARCHERY", "Archery"),
-            ("ATHLETICS", "Athletics"),
-            ("AWARENESS", "Awareness"),
-            ("BRAWL", "Brawl"),
-            ("DODGE", "Dodge"),
-            ("INTEGRITY", "Integrity"),
-            ("MELEE", "Melee"),
-            ("RESISTANCE", "Resistance"),
-            ("THROWN", "Thrown"),
-            ("WAR", "War"),
+            ("Archery", "Archery"),
+            ("Athletics", "Athletics"),
+            ("Awareness", "Awareness"),
+            ("Brawl", "Brawl"),
+            ("Dodge", "Dodge"),
+            ("Integrity", "Integrity"),
+            ("Melee", "Melee"),
+            ("Resistance", "Resistance"),
+            ("Thrown", "Thrown"),
+            ("War", "War"),
         ),
     ),
     (
         "Life", (
-            ("CRAFT", "Craft"),
-            ("LARCENY", "Larceny"),
-            ("LINGUISTICS", "Linguistics"),
-            ("PERFORMANCE", "Performance"),
-            ("PRESENCE", "Presence"),
-            ("RIDE", "Ride"),
-            ("SAIL", "Sail"),
-            ("SOCIALISE", "Socialise"),
-            ("STEALTH", "Stealth"),
-            ("SURVIVAL", "Survival"),
+            ("Craft", "Craft"),
+            ("Larceny", "Larceny"),
+            ("Linguistics", "Linguistics"),
+            ("Performance", "Performance"),
+            ("Presence", "Presence"),
+            ("Ride", "Ride"),
+            ("Sail", "Sail"),
+            ("Socialise", "Socialise"),
+            ("Stealth", "Stealth"),
+            ("Survival", "Survival"),
         ),
     ),
     (
         "Wisdom", (
-            ("BUREAUCRACY", "Bureaucracy"),
-            ("INVESTIGATION", "Investigation"),
-            ("LORE", "Lore"),
-            ("MEDICINE", "Medicine"),
-            ("OCCULT", "Occult"),
+            ("Bureaucracy", "Bureaucracy"),
+            ("Investigation", "Investigation"),
+            ("Lore", "Lore"),
+            ("Medicine", "Medicine"),
+            ("Occult", "Occult"),
         ),
     ),
 ]
 
 STATICS = [
-    ("SOAK NATURAL", "Natural Soak"),
-    ("SOAK ARMORED", "Armored Soak"),
-    ("SOAK TOTAL", "Total Soak"),
-    ("HARDNESS", "Hardness"),
-    ("PARRY", "Parry"),
-    ("EVASION", "Evasion"),
-    ("RESOLVE", "Resolve"),
-    ("GUILE", "Guile"),
-    ("RUSH", "Rush"),
-    ("DISENGAGE", "Disengage"),
-    ("JOIN BATTLE", "Join Battle"),
+    ("Natural Soak", "Natural Soak"),
+    ("Armored Soak", "Armored Soak"),
+    ("Total Soak", "Total Soak"),
+    ("Hardness", "Hardness"),
+    ("Parry", "Parry"),
+    ("Evasion", "Evasion"),
+    ("Resolve", "Resolve"),
+    ("Guile", "Guile"),
+    ("Rush", "Rush"),
+    ("Disengage", "Disengage"),
+    ("Join Battle", "Join Battle"),
 ]
 
 CATEGORIES = [
-    ("L", "Light"),
-    ("M", "Medium"),
-    ("H", "Heavy"),
+    ("Light", "Light"),
+    ("Medium", "Medium"),
+    ("Heavy", "Heavy"),
 ]
 
 TAGS_WEAPONS = [
     (
         "General", (
-            ("ONE HANDED", "One Handed"),
-            ("TWO HANDED", "Two Handed"),
-            ("BASHING", "Bashing"),
-            ("CONCEALABLE", "Concealable"),
-            ("LETHAL", "Lethal"),
-            ("MOUNTED", "Mounted"),
-            ("PIERCING", "Piercing"),
-            ("SPECIAL", "Special"),
+            ("One Handed", "One Handed"),
+            ("Two Handed", "Two Handed"),
+            ("Bashing", "Bashing"),
+            ("Concealable", "Concealable"),
+            ("Lethal", "Lethal"),
+            ("Mounted", "Mounted"),
+            ("Piercing", "Piercing"),
+            ("Special", "Special"),
         ),
     ),
     (
         "Melee", (
-            ("MELEE", "Melee"),
-            ("BALANCED", "Balanced"),
-            ("BRAWL", "Brawl"),
-            ("CHOPPING", "Chopping"),
-            ("DISARMING", "Disarming"),
-            ("FLEXIBLE", "Flexible"),
-            ("IMPROVISED", "Improvised"),
-            ("GRAPPLING", "Grappling"),
-            ("MARTIAL ARTS", "Martial Arts"),
-            ("NATURAL", "Natural"),
-            ("REACHING", "Reaching"),
-            ("SHIELD", "Shield"),
-            ("SMASHING", "Smashing"),
-            ("WORN", "Worn"),
+            ("Melee", "Melee"),
+            ("Balanced", "Balanced"),
+            ("Brawl", "Brawl"),
+            ("Chopping", "Chopping"),
+            ("Disarming", "Disarming"),
+            ("Flexible", "Flexible"),
+            ("Improvised", "Improvised"),
+            ("Grappling", "Grappling"),
+            ("Martial Arts", "Martial Arts"),
+            ("Natural", "Natural"),
+            ("Reaching", "Reaching"),
+            ("Shield", "Shield"),
+            ("Smashing", "Smashing"),
+            ("Worn", "Worn"),
         ),
     ),
     (
         "Thrown", (
-            ("THROWN", "Occult"),
-            ("CUTTING", "Cutting"),
-            ("POISONABLE", "Poisonable"),
-            ("SUBTLE", "Subtle"),
+            ("Occult", "Occult"),
+            ("Cutting", "Cutting"),
+            ("Poisonable", "Poisonable"),
+            ("Subtle", "Subtle"),
         ),
     ),
     (
         "Archery", (
-            ("ARCHERY", "Archery"),
-            ("CROSSBOW", "Crossbow"),
-            ("FLAME", "Flame"),
-            ("POWERFUL", "Powerful"),
-            ("SLOW", "Slow"),
+            ("Archery", "Archery"),
+            ("Crossbow", "Crossbow"),
+            ("Flame", "Flame"),
+            ("Powerful", "Powerful"),
+            ("Slow", "Slow"),
         ),
     ),
 ]
 
 TAGS_ARMOR = [
-    ("BUOYANT", "Buoyant"),
-    ("CONCEALABLE", "Concealable"),
-    ("SILENT", "Silent"),
+    ("Buoyant", "Buoyant"),
+    ("Concealable", "Concealable"),
+    ("Silent", "Silent"),
 ]
 
 INTENSITIES = [
-    ("MINOR", "Minor"),
-    ("MAJOR", "Major"),
-    ("DEFINING", "Defining"),
+    ("Minor", "Minor"),
+    ("Major", "Major"),
+    ("Defining", "Defining"),
 ]
 
 DIE_TYPES = [
-    ("NONE", "None"),
-    ("SUCCESS", "Success"),
-    ("DOUBLE", "Double"),
-    ("EXPLODING_DISAPPEARING", "Exploding / Disappearing"),
-    ("SUBTRACTING", "Subtracting")
+    ("None", "None"),
+    ("Success", "Success"),
+    ("Double", "Double"),
+    ("Exploding / Disappearing", "Exploding / Disappearing"),
+    ("Subtracting", "Subtracting")
+]
+
+CHARM_TYPES = [
+    ("Permanent", "Permanent"),
+    ("Simple", "Simple"),
+    ("Reflexive", "Reflexive"),
+    ("Suplemental", "Suplemental"),
+]
+
+CHARM_DURATIONS = [
+    ("", ""),
+    ("One Round", "One Round"),
+    ("One Scene", "One Scene"),
+    ("Indefinite", "Indefinite"),
+]
+
+CHARM_KEYWORDS = [
+    (
+        "Charms", (
+            ("Advantage", "Advantage"),
+            ("Attack-Action", "Attack-Action"),
+            ("Counterattack", "Counterattack"),
+            ("Form", "Form"),
+            ("Group", "Group"),
+            ("Mute", "Mute"),
+            ("Perilous", "Perilous"),
+            ("Once Per Scene", "Once Per Scene"),
+            ("Once Per Day", "Once Per Day"),
+            ("Once Per Story", "Once Per Story"),
+            ("Once Per Season", "Once Per Season"),
+            ("Pilot", "Pilot"),
+            ("Post-Roll", "Post-Roll"),
+            ("Psyche", "Psyche"),
+            ("Quickshot", "Quickshot"),
+        )
+    ),
+    (
+        "Evocations", (
+            ("Dissonant", "Dissonant"),
+            ("Resonant", "Resonant"),
+        )
+    ),
+]
+
+CASTES_SOLAR = [
+    ("Dawn", "Dawn"),
+    ("Zenith", "Zenith"),
+    ("Twilight", "Twilight"),
+    ("Night", "Night"),
+    ("Eclipse", "Eclipse"),
+]
+
+CASTES_LUNAR = [
+    ("Full Moon", "Full Moon"),
+    ("Changing Moon", "Changing Moon"),
+    ("No Moon", "No Moon"),
+    ("Castless", "Castless")
 ]
 
 #==============================================================================#
@@ -262,7 +320,7 @@ class NamedOneToOneField(models.OneToOneField):
 #==============================================================================#
 #-------------------------------- DICE ROLLING --------------------------------#
 #==============================================================================#
-class rollConfiguration(models.Model):
+class rollConfiguration(PolymorphicModel):
     def __str__(self):
         return self.name
     name = NameField()
@@ -329,192 +387,430 @@ class rollConfiguration(models.Model):
 #==============================================================================#
 #--------------------------------- MODIFIERS ----------------------------------#
 #==============================================================================#
-class modifierBase(models.Model):
-    class Meta:
-        abstract = True
+class modifierBase(PolymorphicModel):
     value = NamedIntegerField("Modifier Value")
 
 class modifierAttribute(modifierBase):
     def __str__(self):
-        return "{} [{}]".format(self.attribute, self.value)
+        return "{} [{}]".format(self.keyword, self.value)
 
-    attribute = SingleChoiceField("Attribute", ATTRIBUTES)
+    keyword = SingleChoiceField("Attribute", ATTRIBUTES)
 
 class modifierAbility(modifierBase):
     def __str__(self):
-        return "{} [{}]".format(self.ability, self.value)
+        return "{} [{}]".format(self.keyword, self.value)
 
-    ability = SingleChoiceField("Ability", ABILITIES)
+    keyword = SingleChoiceField("Ability", ABILITIES)
 
 class modifierStatic(modifierBase):
     def __str__(self):
-        return "{} [{}]".format(self.static, self.value)
+        return "{} [{}]".format(self.keyword, self.value)
 
-    static = SingleChoiceField("Static", STATICS)
+    keyword = SingleChoiceField("Static", STATICS)
 
 #==============================================================================#
 #--------------------------------- CHARACTERS ---------------------------------#
 #==============================================================================#
-class characterBase(models.Model):
+class characterBase(PolymorphicModel):
     def __str__(self):
         return self.name
 
     #======== MODIFIER METHODS ========#
-    def modifierCharm(self, keyword):
-        charms = None
+    def effectModifier(self, keyword):
         modifier = 0
         try:
-            charms = self.charmLunar_set.filter(active=True)
+            ownerships = self.ownershipBase_set.filter(active=True)
+            for ownership in ownerships:
+                try:
+                    modifier += ownership.target.modifier(keyword)
+                except:
+                    pass
         except:
             pass
-        try:
-            charms = self.charmSolar_set.filter(active=True)
-        except:
-            pass
-        if charms:
-            for charm in charms:
-                modifier += charm.modifier(keyword)
         return modifier
-    def modifierMerit(self, keyword):
-        merits = None
-        modifier = 0
-        try:
-            merits = self.merit_set.filter(active=True)
-        except:
-            pass
-        if merits:
-            for merit in merits:
-                modifier += merit.modifier(keyword)
-        return modifier
-    def modifierSpeciality(self, keyword):
-        specialities = None
-        modifier = 0
-        try:
-            specialities = self.speciality_set.filter(active=True)
-        except:
-            pass
-        if specialities:
-            for speciality in specialities:
-                modifier += speciality.modifier(keyword)
-        return modifier
-    def modifierTotal(self, keyword):
-        return self.modifierCharm(keyword) + self.modifierMerit(keyword) + self.modifierSpeciality(keyword)
 
     #============ GENERAL =============#
     name = NameField()
+    player = models.CharField(verbose_name="Player", max_length=100, blank=True)
+    concept = models.TextField(blank=True)
 
     #=========== ATTRIBUTES ===========#
     strength = DotField("Strength")
     def attributeStrength(self):
-        return self.strength + self.modifierTotal("STRENGTH")
+        return self.strength + self.effectModifier("STRENGTH")
+    def dotsStrength(self):
+        output = []
+        for i in range(self.strength):
+            output.append(True)
+        for i in range(5 - self.strength):
+            output.append(False)
+        return output
     dexterity = DotField("Dexterity")
     def attributeDexterity(self):
-        return self.dexterity + self.modifierTotal("DEXTERITY")
+        return self.dexterity + self.effectModifier("DEXTERITY")
+    def dotsDexterity(self):
+        output = []
+        for i in range(self.dexterity):
+            output.append(True)
+        for i in range(5 - self.dexterity):
+            output.append(False)
+        return output
     stamina = DotField("Stamina")
     def attributeStamina(self):
-        return self.stamina + self.modifierTotal("STAMINA")
+        return self.stamina + self.effectModifier("STAMINA")
+    def dotsStamina(self):
+        output = []
+        for i in range(self.stamina):
+            output.append(True)
+        for i in range(5 - self.stamina):
+            output.append(False)
+        return output
     charisma = DotField("Charisma")
     def attributeCharisma(self):
-        return self.charisma + self.modifierTotal("CHARISMA")
+        return self.charisma + self.effectModifier("CHARISMA")
+    def dotsCharisma(self):
+        output = []
+        for i in range(self.charisma):
+            output.append(True)
+        for i in range(5 - self.charisma):
+            output.append(False)
+        return output
     manipulation = DotField("Manipulation")
     def attributeManipulation(self):
-        return self.manipulation + self.modifierTotal("MANIPULATION")
+        return self.manipulation + self.effectModifier("MANIPULATION")
+    def dotsManipulation(self):
+        output = []
+        for i in range(self.manipulation):
+            output.append(True)
+        for i in range(5 - self.manipulation):
+            output.append(False)
+        return output
     appearance = DotField("Apperance")
     def attributeAppearance(self):
-        return self.appearance + self.modifierTotal("APPEARANCE")
+        return self.appearance + self.effectModifier("APPEARANCE")
+    def dotsAppearance(self):
+        output = []
+        for i in range(self.appearance):
+            output.append(True)
+        for i in range(5 - self.appearance):
+            output.append(False)
+        return output
     perception = DotField("Perception")
     def attributePerception(self):
-        return self.perception + self.modifierTotal("PERCEPTION")
+        return self.perception + self.effectModifier("PERCEPTION")
+    def dotsPerception(self):
+        output = []
+        for i in range(self.perception):
+            output.append(True)
+        for i in range(5 - self.perception):
+            output.append(False)
+        return output
     intelligence = DotField("Intelligence")
     def attributeIntelligence(self):
-        return self.intelligence + self.modifierTotal("INTELLIGENCE")
+        return self.intelligence + self.effectModifier("INTELLIGENCE")
+    def dotsIntelligence(self):
+        output = []
+        for i in range(self.intelligence):
+            output.append(True)
+        for i in range(5 - self.intelligence):
+            output.append(False)
+        return output
     wits = DotField("Wits")
     def attributeWits(self):
-        return self.wits + self.modifierTotal("WITS")
+        return self.wits + self.effectModifier("WITS")
+    def dotsWits(self):
+        output = []
+        for i in range(self.wits):
+            output.append(True)
+        for i in range(5 - self.wits):
+            output.append(False)
+        return output
 
     #=========== ABILITIES ============#
     archery = DotField("Archery")
     def abilityArchery(self):
-        return self.archery + self.modifierTotal("ARCHERY")
+        return self.archery + self.effectModifier("ARCHERY")
+    def dotsArchery(self):
+        output = []
+        for i in range(self.archery):
+            output.append(True)
+        for i in range(5 - self.archery):
+            output.append(False)
+        return output
     athletics = DotField("Athletics")
     def abilityAthletics(self):
-        return self.athletics + self.modifierTotal("ATHLETICS")
+        return self.athletics + self.effectModifier("ATHLETICS")
+    def dotsAthletics(self):
+        output = []
+        for i in range(self.athletics):
+            output.append(True)
+        for i in range(5 - self.athletics):
+            output.append(False)
+        return output
     awareness = DotField("Awareness")
     def abilityAwareness(self):
-        return self.awareness + self.modifierTotal("AWARENESS")
+        return self.awareness + self.effectModifier("AWARENESS")
+    def dotsAwareness(self):
+        output = []
+        for i in range(self.awareness):
+            output.append(True)
+        for i in range(5 - self.awareness):
+            output.append(False)
+        return output
     brawl = DotField("Brawl")
     def abilityBrawl(self):
-        return self.brawl + self.modifierTotal("BRAWL")
+        return self.brawl + self.effectModifier("BRAWL")
+    def dotsBrawl(self):
+        output = []
+        for i in range(self.brawl):
+            output.append(True)
+        for i in range(5 - self.brawl):
+            output.append(False)
+        return output
     bureaucracy = DotField("Bureaucracy")
     def abilityBureaucracy(self):
-        return self.bureaucracy + self.modifierTotal("BUREAUCRACY")
+        return self.bureaucracy + self.effectModifier("BUREAUCRACY")
+    def dotsBureaucracy(self):
+        output = []
+        for i in range(self.bureaucracy):
+            output.append(True)
+        for i in range(5 - self.bureaucracy):
+            output.append(False)
+        return output
     craft = DotField("Craft")
     def abilityCraft(self):
-        return self.craft + self.modifierTotal("CRAFT")
+        return self.craft + self.effectModifier("CRAFT")
+    def dotsCraft(self):
+        output = []
+        for i in range(self.craft):
+            output.append(True)
+        for i in range(5 - self.craft):
+            output.append(False)
+        return output
     dodge = DotField("Dodge")
     def abilityDodge(self):
-        return self.dodge + self.modifierTotal("DODGE")
+        return self.dodge + self.effectModifier("DODGE")
+    def dotsDodge(self):
+        output = []
+        for i in range(self.dodge):
+            output.append(True)
+        for i in range(5 - self.dodge):
+            output.append(False)
+        return output
     integrity = DotField("Integrity")
     def abilityIntegrity(self):
-        return self.integrity + self.modifierTotal("INTEGRITY")
+        return self.integrity + self.effectModifier("INTEGRITY")
+    def dotsIntegrity(self):
+        output = []
+        for i in range(self.integrity):
+            output.append(True)
+        for i in range(5 - self.integrity):
+            output.append(False)
+        return output
     investigation = DotField("Investigation")
     def abilityInvestigation(self):
-        return self.investigation + self.modifierTotal("INVESTIGATION")
+        return self.investigation + self.effectModifier("INVESTIGATION")
+    def dotsInvestigation(self):
+        output = []
+        for i in range(self.investigation):
+            output.append(True)
+        for i in range(5 - self.investigation):
+            output.append(False)
+        return output
     larceny = DotField("Larceny")
     def abilityLarceny(self):
-        return self.larceny + self.modifierTotal("LARCENY")
+        return self.larceny + self.effectModifier("LARCENY")
+    def dotsLarceny(self):
+        output = []
+        for i in range(self.larceny):
+            output.append(True)
+        for i in range(5 - self.larceny):
+            output.append(False)
+        return output
     linguistics = DotField("Linguistics")
     def abilityLinguistics(self):
-        return self.linguistics + self.modifierTotal("LINGUISTICS")
+        return self.linguistics + self.effectModifier("LINGUISTICS")
+    def dotsLinguistics(self):
+        output = []
+        for i in range(self.linguistics):
+            output.append(True)
+        for i in range(5 - self.linguistics):
+            output.append(False)
+        return output
     lore = DotField("Lore")
     def abilityLore(self):
-        return self.lore + self.modifierTotal("LORE")
+        return self.lore + self.effectModifier("LORE")
+    def dotsLore(self):
+        output = []
+        for i in range(self.lore):
+            output.append(True)
+        for i in range(5 - self.lore):
+            output.append(False)
+        return output
     martialArts = DotField("MartialArts")
     def abilityMartialArts(self):
-        return self.martialArts + self.modifierTotal("MARTIAL ARTS")
+        return self.martialArts + self.effectModifier("MARTIAL ARTS")
+    def dotsMartialArts(self):
+        output = []
+        for i in range(self.martialArts):
+            output.append(True)
+        for i in range(5 - self.martialArts):
+            output.append(False)
+        return output
     medicine = DotField("Medicine")
     def abilityMedicine(self):
-        return self.medicine + self.modifierTotal("MEDICINE")
+        return self.medicine + self.effectModifier("MEDICINE")
+    def dotsMedicine(self):
+        output = []
+        for i in range(self.medicine):
+            output.append(True)
+        for i in range(5 - self.medicine):
+            output.append(False)
+        return output
     melee = DotField("Melee")
     def abilityMelee(self):
-        return self.melee + self.modifierTotal("MELEE")
+        return self.melee + self.effectModifier("MELEE")
+    def dotsMelee(self):
+        output = []
+        for i in range(self.melee):
+            output.append(True)
+        for i in range(5 - self.melee):
+            output.append(False)
+        return output
     occult = DotField("Occult")
     def abilityOccult(self):
-        return self.occult + self.modifierTotal("OCCULT")
+        return self.occult + self.effectModifier("OCCULT")
+    def dotsOccult(self):
+        output = []
+        for i in range(self.occult):
+            output.append(True)
+        for i in range(5 - self.occult):
+            output.append(False)
+        return output
     performance = DotField("Performance")
     def abilityPerformance(self):
-        return self.performance + self.modifierTotal("PERFORMANCE")
+        return self.performance + self.effectModifier("PERFORMANCE")
+    def dotsPerformance(self):
+        output = []
+        for i in range(self.performance):
+            output.append(True)
+        for i in range(5 - self.performance):
+            output.append(False)
+        return output
     presence = DotField("Presence")
     def abilityPresence(self):
-        return self.presence + self.modifierTotal("PRESENCE")
+        return self.presence + self.effectModifier("PRESENCE")
+    def dotsPresence(self):
+        output = []
+        for i in range(self.presence):
+            output.append(True)
+        for i in range(5 - self.presence):
+            output.append(False)
+        return output
     resistance = DotField("Resistance")
     def abilityResistance(self):
-        return self.resistance + self.modifierTotal("RESISTANCE")
+        return self.resistance + self.effectModifier("RESISTANCE")
+    def dotsResistance(self):
+        output = []
+        for i in range(self.resistance):
+            output.append(True)
+        for i in range(5 - self.resistance):
+            output.append(False)
+        return output
     ride = DotField("Ride")
     def abilityRide(self):
-        return self.ride + self.modifierTotal("RIDE")
+        return self.ride + self.effectModifier("RIDE")
+    def dotsRide(self):
+        output = []
+        for i in range(self.ride):
+            output.append(True)
+        for i in range(5 - self.ride):
+            output.append(False)
+        return output
     sail = DotField("Sail")
     def abilitySail(self):
-        return self.sail + self.modifierTotal("SAIL")
+        return self.sail + self.effectModifier("SAIL")
+    def dotsSail(self):
+        output = []
+        for i in range(self.sail):
+            output.append(True)
+        for i in range(5 - self.sail):
+            output.append(False)
+        return output
     socialize = DotField("Socialize")
     def abilitySocialize(self):
-        return self.socialize + self.modifierTotal("SOCIALIZE")
+        return self.socialize + self.effectModifier("SOCIALIZE")
+    def dotsSocialize(self):
+        output = []
+        for i in range(self.socialize):
+            output.append(True)
+        for i in range(5 - self.socialize):
+            output.append(False)
+        return output
     stealth = DotField("Stealth")
     def abilityStealth(self):
-        return self.stealth + self.modifierTotal("STEALTH")
+        return self.stealth + self.effectModifier("STEALTH")
+    def dotsStealth(self):
+        output = []
+        for i in range(self.stealth):
+            output.append(True)
+        for i in range(5 - self.stealth):
+            output.append(False)
+        return output
     survival = DotField("Survival")
     def abilitySurvival(self):
-        return self.survival + self.modifierTotal("SURVIVAL")
+        return self.survival + self.effectModifier("SURVIVAL")
+    def dotsSurvival(self):
+        output = []
+        for i in range(self.survival):
+            output.append(True)
+        for i in range(5 - self.survival):
+            output.append(False)
+        return output
     thrown = DotField("Thrown")
     def abilityThrown(self):
-        return self.thrown + self.modifierTotal("THROWN")
+        return self.thrown + self.effectModifier("THROWN")
+    def dotsThrown(self):
+        output = []
+        for i in range(self.thrown):
+            output.append(True)
+        for i in range(5 - self.thrown):
+            output.append(False)
+        return output
     war = DotField("War")
     def abilityWar(self):
-        return self.war + self.modifierTotal("WAR")
+        return self.war + self.effectModifier("WAR")
+    def dotsWar(self):
+        output = []
+        for i in range(self.war):
+            output.append(True)
+        for i in range(5 - self.war):
+            output.append(False)
+        return output
 
     #============= MERITS =============#
     # Reverse relation
-    # .merit_set.all()
+    def meritSet(self):
+        output = []
+        try:
+            ownerships = self.ownershipMerit_set.all()
+            for ownership in ownerships:
+                output.append(ownership.target)
+        except:
+            pass
+        return output
+
+    #========== SPECIALITIES ==========#
+    # Reverse relation
+    def specialitySet(self):
+        output = []
+        try:
+            ownerships = self.ownershipSpeciality_set.all()
+            for ownership in ownerships:
+                output.append(ownership.target)
+        except:
+            pass
+        return output
 
     #=========== WILLPOWER ============#
     willpowerCap = 10
@@ -527,17 +823,32 @@ class characterBase(models.Model):
 
     #============ WEAPONS =============#
     # Reverse relation
-    # .itemWeaponMelee_set.all()
-    # .itemWeaponRanged_set.all()
+    def itemWeaponSet(self):
+        output = []
+        try:
+            ownerships = self.ownershipItemWeapon_set.all()
+            for ownership in ownerships:
+                output.append(ownership.target)
+        except:
+            pass
+        return output
 
     #============= ARMOR ==============#
     # Reverse relation
-    # .itemArmor_set.all()
+    def itemArmorSet(self):
+        output = []
+        try:
+            ownerships = self.ownershipItemArmor_set.all()
+            for ownership in ownerships:
+                output.append(ownership.target)
+        except:
+            pass
+        return output
     def armorSoak(self):
         armor = None
         modifier = 0
         try:
-            armor = self.itemArmor_set.filter(equipped=True)
+            armor = self.itemArmorSet().filter(equipped=True)
         except:
             pass
         if armor:
@@ -548,7 +859,7 @@ class characterBase(models.Model):
         armor = None
         modifier = 0
         try:
-            armor = self.itemArmor_set.filter(equipped=True)
+            armor = self.itemArmorSet().filter(equipped=True)
         except:
             pass
         if armor:
@@ -559,7 +870,7 @@ class characterBase(models.Model):
         armor = None
         modifier = 0
         try:
-            armor = self.itemArmor_set.filter(equipped=True)
+            armor = self.itemArmorSet().filter(equipped=True)
         except:
             pass
         if armor:
@@ -569,7 +880,15 @@ class characterBase(models.Model):
 
     #============= ITEMS ==============#
     # Reverse relation
-    # .item_set.all()
+    def itemSet(self):
+        output = []
+        try:
+            ownerships = self.ownershipItem_set.all()
+            for ownership in ownerships:
+                output.append(ownership.target)
+        except:
+            pass
+        return output
 
     #============ ESSENCE =============#
     essence = NamedIntegerField("Essence")
@@ -586,13 +905,13 @@ class characterBase(models.Model):
 
     #============ STATICS =============#
     def resolve(self, speciality=None, mod=0):
-        return mod + ceil((self.attributeWits() + self.abilityIntegrity()) / 2) + self.modifierTotal("RESOLVE")
+        return mod + ceil((self.attributeWits() + self.abilityIntegrity()) / 2) + self.effectModifier("RESOLVE")
 
     def guile(self, speciality=None, mod=0):
-        return mod + ceil((self.attributeManipulation() + self.abilitySocialize()) / 2) + self.modifierTotal("GUILE")
+        return mod + ceil((self.attributeManipulation() + self.abilitySocialize()) / 2) + self.effectModifier("GUILE")
 
     def soakNatural(self, mod=0):
-        return mod + self.attributeStamina() + self.modifierTotal("SOAK NATURAL")
+        return mod + self.attributeStamina() + self.effectModifier("SOAK NATURAL")
 
     def soakArmored(self, mod=0):
         return mod + self.armorSoak()
@@ -601,23 +920,22 @@ class characterBase(models.Model):
         return mod + self.soakNatural() + self.soakArmored()
 
     def hardness(self, mod=0):
-        return mod + self.armorHardness() + self.modifierTotal("HARDNESS")
+        return mod + self.armorHardness() + self.effectModifier("HARDNESS")
 
     def joinBattle(self, mod=0):
-        return mod + self.attributeWits() + self.abilityAwareness() + 3 + self.modifierTotal("JOIN BATTLE")
+        return mod + self.attributeWits() + self.abilityAwareness() + 3 + self.effectModifier("JOIN BATTLE")
 
     def evasion(self, mod=0):
-        return mod + ceil((self.attributeDexterity() + self.abilityDodge()) / 2) - self.armorMobilityPenalty() + self.modifierTotal("EVASION")
+        return mod + ceil((self.attributeDexterity() + self.abilityDodge()) / 2) - self.armorMobilityPenalty() + self.effectModifier("EVASION")
 
     def rush(self, mod=0):
-        return mod + self.attributeDexterity() + self.abilityAthletics() + self.modifierTotal("RUSH")
+        return mod + self.attributeDexterity() + self.abilityAthletics() + self.effectModifier("RUSH")
 
     def disengage(self, mod=0):
-        return mod + self.attributeDexterity() + self.abilityDodge() + self.modifierTotal("DISENGAGE")
+        return mod + self.attributeDexterity() + self.abilityDodge() + self.effectModifier("DISENGAGE")
 
 class characterExaltBase(characterBase):
-    class Meta:
-        abstract = True
+    anima = models.CharField(verbose_name="Anima", max_length=100)
 
     #============= MOTES ==============#
     motesPersonalMax = NamedIntegerField("Maximum Personal Motes")
@@ -630,45 +948,100 @@ class characterExaltBase(characterBase):
     limitBreak = NamedIntegerField("Limit Break")
 
     #======= EXALTED EXPERIENCE =======#
-    experienceExaltedTotal = NamedIntegerField("Total Experience")
-    experienceExalted = NamedIntegerField("Current Experience")
+    experienceExaltedTotal = NamedIntegerField("Total Exalted Experience")
+    experienceExalted = NamedIntegerField("Current Exalted Experience")
+
+    #========== MARTIAL ARTS ==========#
+    # Reverse relation
+    def martialArtSet(self):
+        output = []
+        try:
+            ownerships = self.ownershipCharmMartialArt_set.all()
+            for ownership in ownerships:
+                output.append(ownership.target)
+        except:
+            pass
+        return output
+
+    #=========== EVOCATIONS ===========#
+    # Reverse relation
+    def evocationSet(self):
+        output = []
+        try:
+            ownerships = self.ownershipCharmEvocation_set.all()
+            for ownership in ownerships:
+                output.append(ownership.target)
+        except:
+            pass
+        return output
+
+class characterMortal(characterBase):
+    def type(self):
+        return "Mortal"
 
 class characterExaltSolar(characterExaltBase):
+    def type(self):
+        return "Solar Exalt"
+
+    caste = SingleChoiceField("Solar Caste", CASTES_SOLAR)
+    #============= CHARMS =============#
+    # Reverse relation
+    def charmSet(self):
+        output = []
+        try:
+            ownerships = self.ownershipCharmSolar_set.all()
+            for ownership in ownerships:
+                output.append(ownership.target)
+        except:
+            pass
+        return output
 
     #======= SUPERNAL & FAVORED =======#
     abilitySupernal = SingleChoiceField("Supernal Ability", ABILITIES)
     abilityFavored = MultiChoiceField("Favoured Abilities", ABILITIES)
 
+class characterExaltLunar(characterExaltBase):
+    def type(self):
+        return "Lunar Exalt"
+
+    caste = SingleChoiceField("Lunar Caste", CASTES_LUNAR)
+    #========= SHAPESHIFTING ==========#
+    spiritShape = models.CharField(verbose_name="Spirit Shape", max_length=100)
+    # Reverse relation
+    def shapeSet(self):
+        output = []
+        try:
+            ownerships = self.ownershipCharmLunarShape_set.all()
+            for ownership in ownerships:
+                output.append(ownership.target)
+        except:
+            pass
+        return output
+
     #============= CHARMS =============#
     # Reverse relation
-    # .charmSolar_set.all()
-
-class characterExaltLunar(characterExaltBase):
+    def charmSet(self):
+        output = []
+        try:
+            ownerships = self.ownershipCharmLunar_set.all()
+            for ownership in ownerships:
+                output.append(ownership.target)
+        except:
+            pass
+        return output
 
     #============ FAVORED =============#
     attributeFavored = MultiChoiceField("Favoured Attributes", ATTRIBUTES)
 
-    #========= SHAPESHIFTING ==========#
-    # Reverse relation
-    # .charmLunarShape_set.all()
-
-    #============= CHARMS =============#
-    # Reverse relation
-    # .charmLunar_set.all()
-
 #==============================================================================#
 #----------------------------------- ITEMS ------------------------------------#
 #==============================================================================#
-class itemBase(models.Model):
-    class Meta:
-        abstract = True
-
+class itemBase(PolymorphicModel):
     def __str__(self):
         return self.name
 
     name = NameField()
     description = DescriptionField()
-    character = NamedForeignKeyField("Character", characterBase)
 
 class item(itemBase):
     pass
@@ -677,10 +1050,6 @@ class item(itemBase):
 #---------------------------------- WEAPONS -----------------------------------#
 #==============================================================================#
 class itemWeaponBase(itemBase):
-    class Meta:
-        abstract = True
-
-    equipped = NamedBooleanField("Equipped?")
     category = SingleChoiceField("Category", CATEGORIES)
     tags = MultiChoiceField("Tags", TAGS_WEAPONS)
     accuracy = NamedIntegerField("Accuracy")
@@ -729,7 +1098,6 @@ class itemWeaponRanged(itemWeaponBase):
 #----------------------------------- ARMOR ------------------------------------#
 #==============================================================================#
 class itemArmor(itemBase):
-    equipped = NamedBooleanField("Equipped?")
     category = SingleChoiceField("Category", CATEGORIES)
     tags = MultiChoiceField("Tags", TAGS_ARMOR)
     soak = NamedIntegerField("Soak")
@@ -738,113 +1106,73 @@ class itemArmor(itemBase):
     attunement = NamedIntegerField("Attunement")
 
 #==============================================================================#
-#----------------------------------- CHARMS -----------------------------------#
+#---------------------------------- EFFECTS -----------------------------------#
 #==============================================================================#
-class charmBase(models.Model):
-    class Meta:
-        abstract = True
 
+class effectBase(PolymorphicModel):
     def __str__(self):
         return self.name
 
     name = NameField()
     description = DescriptionField()
-    levelEssence = NamedIntegerField("Essence Level")
-    levelKey = NamedIntegerField("Key Level")
-    active = NamedBooleanField("Active?")
     rollConfiguration = NamedManyToManyField("Roll Configurations", rollConfiguration)
-    modifierAttribute = NamedManyToManyField("Attribute Modifiers", modifierAttribute)
-    modifierAbility = NamedManyToManyField("Abilities Modifiers", modifierAbility)
-    modifierStatic = NamedManyToManyField("Statics Modifiers", modifierStatic)
+    modifiers = NamedManyToManyField("Modifiers", modifierBase)
     def modifier(self, keyword):
         output = 0
-        for modifierAttribute in self.modifierAttribute.all():
-            if keyword == modifierAttribute.attribute:
-                output += modifierAttribute.value
-        for modifierAbility in self.modifierAbility.all():
-            if keyword == modifierAbility.ability:
-                output += modifierAbility.value
-        for modifierStatic in self.modifierStatic.all():
-            if keyword == modifierStatic.static:
-                output += modifierStatic.value
+        for modifier in self.modifiers.all():
+            if keyword == modifier.keyword:
+                output += modifier.value
         return output
 
+#==============================================================================#
+#----------------------------------- CHARMS -----------------------------------#
+#==============================================================================#
+class charmBase(effectBase):
+    levelEssence = NamedIntegerField("Essence Level")
+    charmType = SingleChoiceField("Charm Type", CHARM_TYPES)
+    duration = SingleChoiceField("Charm Duration", CHARM_DURATIONS)
+    keywords = MultiChoiceField("Charm Keywords", CHARM_KEYWORDS)
+
+class charmMartialArt(charmBase):
+    levelKey = NamedIntegerField("Martial Arts Level")
+    key = None
+
+class charmEvocation(charmBase):
+    levelKey = 0
+    key = NamedForeignKeyField("Artifact", itemBase)
+
 class charmSolar(charmBase):
-    ability = SingleChoiceField("Key Ability", ABILITIES)
-    character = NamedForeignKeyField("Character", characterExaltSolar)
+    levelKey = NamedIntegerField("Ability Level")
+    key = SingleChoiceField("Key Ability", ABILITIES)
 
 class charmLunar(charmBase):
-    attribute = SingleChoiceField("Key Attribute", ATTRIBUTES)
-    character = NamedForeignKeyField("Character", characterExaltLunar)
+    levelKey = NamedIntegerField("Attribute Level")
+    key = SingleChoiceField("Key Attribute", ATTRIBUTES)
 
 class charmLunarShape(charmBase):
-    description = DescriptionField()
-    character = NamedForeignKeyField("Character", characterExaltLunar)
+    levelKey = 0
+    key = None
 
 #==============================================================================#
 #----------------------------------- MERITS -----------------------------------#
 #==============================================================================#
-class merit(models.Model):
-    def __str__(self):
-        return self.name
-
-    name = NameField()
-    description = DescriptionField()
+class merit(effectBase):
     dots = DotField("Dots")
-    character = NamedForeignKeyField("Character", characterBase)
-    active = NamedBooleanField("Active?")
-    rollConfiguration = NamedManyToManyField("Roll Configurations", rollConfiguration)
-    modifierAttribute = NamedManyToManyField("Attribute Modifiers", modifierAttribute)
-    modifierAbility = NamedManyToManyField("Abilities Modifiers", modifierAbility)
-    modifierStatic = NamedManyToManyField("Statics Modifiers", modifierStatic)
-    def modifier(self, keyword):
-        output = 0
-        for modifierAttribute in self.modifierAttribute.all():
-            if keyword == modifierAttribute.attribute:
-                output += modifierAttribute.value
-        for modifierAbility in self.modifierAbility.all():
-            if keyword == modifierAbility.ability:
-                output += modifierAbility.value
-        for modifierStatic in self.modifierStatic.all():
-            if keyword == modifierStatic.static:
-                output += modifierStatic.value
-        return output
 
 #==============================================================================#
 #-------------------------------- SPECIALITIES --------------------------------#
 #==============================================================================#
-class speciality(models.Model):
-    def __str__(self):
-        return self.name
-
-    name = NameField()
-    character = NamedForeignKeyField("Character", characterBase)
-    active = NamedBooleanField("Active?")
-    modifierAbility = NamedManyToManyField("Abilities Modifiers", modifierAbility)
-    modifierStatic = NamedManyToManyField("Statics Modifiers", modifierStatic)
-    def modifier(self, keyword):
-        output = 0
-        for modifierAbility in self.modifierAbility.all():
-            if keyword == modifierAbility.ability:
-                output += modifierAbility.value
-        for modifierStatic in self.modifierStatic.all():
-            if keyword == modifierStatic.static:
-                output += modifierStatic.value
-        return output
-
+class speciality(effectBase):
+    pass
 #==============================================================================#
 #--------------------------------- INTIMACIES ---------------------------------#
 #==============================================================================#
-class intimacyBase(models.Model):
-    class Meta:
-        abstract = True
-
+class intimacyBase(PolymorphicModel):
     def __str__(self):
         return "[{}] {}".format(self.description, self.intensity)
 
     description = DescriptionField()
     intensity = SingleChoiceField("Intensity", INTENSITIES)
-    character = NamedForeignKeyField("Character", characterBase)
 
 class intimacyTie(intimacyBase):
     target = NamedCharField("Target")
@@ -852,3 +1180,47 @@ class intimacyTie(intimacyBase):
 class intimacyPrincipal(intimacyBase):
     pass
 
+#==============================================================================#
+#--------------------------------- OWNERSHIP ----------------------------------#
+#==============================================================================#
+class ownershipBase(PolymorphicModel):
+    notes = models.TextField(verbose_name="Notes", blank=True)
+    active = NamedBooleanField("Active/Equipped?")
+
+class ownershipCharacterBase(ownershipBase):
+    owner = NamedForeignKeyField("Owner", characterBase)
+class ownershipCharacterExaltBase(ownershipBase):
+    owner = NamedForeignKeyField("Exalted Owner", characterExaltBase)
+class ownershipCharacterExaltSolarBase(ownershipBase):
+    owner = NamedForeignKeyField("Solar Exalted Owner", characterExaltSolar)
+class ownershipCharacterExaltLunarBase(ownershipBase):
+    owner = NamedForeignKeyField("Lunar Exalted Owner", characterExaltLunar)
+
+class ownershipItem(ownershipCharacterBase):
+    target = NamedForeignKeyField("Item", item)
+class ownershipItemWeapon(ownershipCharacterBase):
+    target = NamedForeignKeyField("Weapon", itemWeaponBase)
+class ownershipItemArmor(ownershipCharacterBase):
+    target = NamedForeignKeyField("Armor", itemArmor)
+
+class ownershipCharmMartialArt(ownershipCharacterExaltBase):
+    target = NamedForeignKeyField("Martial Arts Charm", characterExaltBase)
+class ownershipCharmEvocation(ownershipCharacterExaltBase):
+    target = NamedForeignKeyField("Evocation", characterExaltBase)
+class ownershipCharmSolar(ownershipCharacterExaltSolarBase):
+    target = NamedForeignKeyField("Solar Charm", characterExaltSolar)
+class ownershipCharmLunar(ownershipCharacterExaltLunarBase):
+    target = NamedForeignKeyField("Lunar Charm", characterExaltLunar)
+class ownershipCharmLunarShape(ownershipCharacterExaltLunarBase):
+    target = NamedForeignKeyField("Lunar Shape", characterExaltLunar)
+
+class ownershipMerit(ownershipCharacterBase):
+    target = NamedForeignKeyField("Merit", merit)
+
+class ownershipSpeciality(ownershipCharacterBase):
+    target = NamedForeignKeyField("Speciality", speciality)
+
+class ownershipIntimacyTie(ownershipCharacterBase):
+    target = NamedForeignKeyField("Tie", intimacyTie)
+class ownershipIntimacyPrincipal(ownershipCharacterBase):
+    target = NamedForeignKeyField("Principal", intimacyPrincipal)
