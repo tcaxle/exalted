@@ -1,0 +1,109 @@
+{% extends 'templates/base.html' %}
+{% load static %}
+
+{% block content %}
+<div class="w3-cell-row w3-row-padding">
+	<!-- Left Column -->
+	<div class="w3-cell w3-row w3-mobile">
+		<div class="custom-text-grey w3-card-4 w3-margin-bottom" style="background-image: url({% static 'images/tiling/manuscript.jpg' %})">
+			<div class="w3-container">
+				{% block general %}
+				{% endblock %}
+			</div>
+		</div>
+		<div class="custom-text-grey w3-card-4 w3-margin-bottom" style="background-image: url({% static 'images/tiling/manuscript.jpg' %})">
+			<div class="w3-container">
+				{% block abilities %}
+				{% endblock %}
+			</div>
+		</div>
+	</div>
+
+	<div class="w3-cell w3-cell-middle w3-hide-small">&emsp;</div>
+
+	<!-- Right Column -->
+	<div class="w3-cell w3-row w3-mobile">
+		<div class="w3-card-4 custom-text-grey w3-margin-bottom" style="background-image: url({% static 'images/tiling/manuscript.jpg' %})">
+			<div class="w3-container">
+				{% block attributes %}
+				{% endblock %}
+			</div>
+		</div>
+		<div class="w3-cell-row">
+			<div class="w3-cell w3-mobile">
+				<div class="w3-card-4 custom-text-grey w3-margin-bottom" style="background-image: url({% static 'images/tiling/manuscript.jpg' %})">
+					<div class="w3-container">
+						{% block specialities %}
+						{% endblock %}
+					</div>
+				</div>
+				<div class="w3-card-4 custom-text-grey w3-margin-bottom" style="background-image: url({% static 'images/tiling/manuscript.jpg' %})">
+					<div class="w3-container">
+						{% block willpower %}
+						{% endblock %}
+					</div>
+				</div>
+				<div class="w3-card-4 custom-text-grey w3-margin-bottom" style="background-image: url({% static 'images/tiling/manuscript.jpg' %})">
+					<div class="w3-container">
+						{% block essence %}
+						{% endblock %}
+					</div>
+				</div>
+			</div>
+			<div class="w3-cell w3-cell-middle w3-hide-small">&emsp;</div>
+			<div class="w3-cell w3-mobile">
+				<div class="w3-card-4 custom-text-grey w3-margin-bottom" style="background-image: url({% static 'images/tiling/manuscript.jpg' %})">
+					<div class="w3-container">
+						{% block merits %}
+						{% endblock %}
+					</div>
+				</div>
+				<div class="w3-card-4 custom-text-grey w3-margin-bottom" style="background-image: url({% static 'images/tiling/manuscript.jpg' %})">
+					<div class="w3-container">
+						{% block limit %}
+						{% endblock %}
+					</div>
+				</div>
+			</div>
+		</div>
+		<div class="w3-card-4 custom-text-grey w3-margin-bottom" style="background-image: url({% static 'images/tiling/manuscript.jpg' %})">
+			<div class="w3-container">
+				{% block experience %}
+				{% endblock %}
+			</div>
+		</div>
+		<div class="w3-card-4 custom-text-grey w3-margin-bottom" style="background-image: url({% static 'images/tiling/manuscript.jpg' %})">
+			<div class="w3-container">
+				{% block weapons_armor %}
+				{% endblock %}
+			</div>
+		</div>
+	</div>
+</div>
+<div class="w3-row-padding">
+	<div class="w3-card-4 custom-text-grey w3-margin-bottom" style="background-image: url({% static 'images/tiling/manuscript.jpg' %})">
+		<div class="w3-container">
+			{% block health_defense %}
+			{% endblock %}
+		</div>
+	</div>
+	<div class="w3-card-4 custom-text-grey w3-margin-bottom" style="background-image: url({% static 'images/tiling/manuscript.jpg' %})">
+		<div class="w3-container">
+			{% block intimacies %}
+			{% endblock %}
+		</div>
+	</div>
+	<div class="w3-card-4 custom-text-grey w3-margin-bottom" style="background-image: url({% static 'images/tiling/manuscript.jpg' %})">
+		<div class="w3-container">
+			{% block charms %}
+			{% endblock %}
+		</div>
+	</div>
+	<div class="w3-card-4 custom-text-grey w3-margin-bottom" style="background-image: url({% static 'images/tiling/manuscript.jpg' %})">
+		<div class="w3-container">
+			{% block items %}
+			{% endblock %}
+		</div>
+	</div>
+</div>
+{% endblock %}

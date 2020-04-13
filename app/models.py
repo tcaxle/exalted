@@ -812,10 +812,42 @@ class characterBase(PolymorphicModel):
             pass
         return output
 
+    #=========== INTIMACIES ===========#
+    # Reverse relation
+    def intimacyTieSet(self):
+        output = []
+        try:
+            ownerships = self.ownershipIntimacyTie_set.all()
+            for ownership in ownerships:
+                output.append(ownership.target)
+        except:
+            pass
+        return output
+    # Reverse relation
+    def intimacyPrincipalSet(self):
+        output = []
+        try:
+            ownerships = self.ownershipIntimacyPrincipal_set.all()
+            for ownership in ownerships:
+                output.append(ownership.target)
+        except:
+            pass
+        return output
+    def intimacySet(self):
+        return self.intimacyTieSet() + self.intimacyPrincipalSet()
+
     #=========== WILLPOWER ============#
-    willpowerCap = 10
     willpowerMax = NamedIntegerField("Maximum Willpower")
     willpower = NamedIntegerField("Current Willpower")
+    def dotsTriWillpower(self):
+        output = [0 for i in range(10)]
+        for i in range(10):
+            if i < self.willpowerMax and i >= self.willpower:
+                output[i] = 1
+            elif i < self.willpower:
+                output[i] = 2
+        return output
+
 
     #=========== EXPERIENCE ===========#
     experienceTotal = NamedIntegerField("Total Experience")
@@ -892,6 +924,13 @@ class characterBase(PolymorphicModel):
 
     #============ ESSENCE =============#
     essence = NamedIntegerField("Essence")
+    def dotsEssence(self):
+        output = []
+        for i in range(self.essence):
+            output.append(True)
+        for i in range(5 - self.essence):
+            output.append(False)
+        return output
 
     #============= HEALTH =============#
     health0 = NamedIntegerField("'-0' Health Levels")
@@ -942,10 +981,16 @@ class characterExaltBase(characterBase):
     motesPersonal = NamedIntegerField("Current Personal Motes")
     motesPeripheralMax = NamedIntegerField("Maximum Peripheral Motes")
     motesPeripheral = NamedIntegerField("Current Peripheral Motes")
+    motesCommitted = NamedIntegerField("Committed Motes")
 
     #============= LIMIT ==============#
     limitTrigger = models.TextField(verbose_name="Limit Trigger", blank="False", max_length=1000)
     limitBreak = NamedIntegerField("Limit Break")
+    def dotsLimit(self):
+        output = [False for i in range(10)]
+        for i in range(10):
+            output[i] = i < self.limitBreak
+        return output
 
     #======= EXALTED EXPERIENCE =======#
     experienceExaltedTotal = NamedIntegerField("Total Exalted Experience")
@@ -1187,40 +1232,43 @@ class ownershipBase(PolymorphicModel):
     notes = models.TextField(verbose_name="Notes", blank=True)
     active = NamedBooleanField("Active/Equipped?")
 
-class ownershipCharacterBase(ownershipBase):
-    owner = NamedForeignKeyField("Owner", characterBase)
-class ownershipCharacterExaltBase(ownershipBase):
-    owner = NamedForeignKeyField("Exalted Owner", characterExaltBase)
-class ownershipCharacterExaltSolarBase(ownershipBase):
-    owner = NamedForeignKeyField("Solar Exalted Owner", characterExaltSolar)
-class ownershipCharacterExaltLunarBase(ownershipBase):
-    owner = NamedForeignKeyField("Lunar Exalted Owner", characterExaltLunar)
+class ownershipItem(ownershipBase):
+    target = NamedForeignKeyField("Item", item, related_name="ownershipItemTarget_set")
+    owner = NamedForeignKeyField("Owner", characterBase, related_name="ownershipItem_set")
+class ownershipItemWeapon(ownershipBase):
+    target = NamedForeignKeyField("Weapon", itemWeaponBase, related_name="ownershipItemWeaponTarget_set")
+    owner = NamedForeignKeyField("Owner", characterBase, related_name="ownershipItemWeapon_set")
+class ownershipItemArmor(ownershipBase):
+    target = NamedForeignKeyField("Armor", itemArmor, related_name="ownershipItemArmorTarget_set")
+    owner = NamedForeignKeyField("Owner", characterBase, related_name="ownershipItemArmor_set")
 
-class ownershipItem(ownershipCharacterBase):
-    target = NamedForeignKeyField("Item", item)
-class ownershipItemWeapon(ownershipCharacterBase):
-    target = NamedForeignKeyField("Weapon", itemWeaponBase)
-class ownershipItemArmor(ownershipCharacterBase):
-    target = NamedForeignKeyField("Armor", itemArmor)
+class ownershipCharmMartialArt(ownershipBase):
+    target = NamedForeignKeyField("Martial Arts Charm", characterExaltBase, related_name="ownershipCharmMartialArtTarget_set")
+    owner = NamedForeignKeyField("Exalted Owner", characterExaltBase, related_name="ownershipCharmMartialArt_set")
+class ownershipCharmEvocation(ownershipBase):
+    target = NamedForeignKeyField("Evocation", characterExaltBase, related_name="ownershipCharmEvocationTarget_set")
+    owner = NamedForeignKeyField("Exalted Owner", characterExaltBase, related_name="ownershipCharmEvocation_set")
+class ownershipCharmSolar(ownershipBase):
+    target = NamedForeignKeyField("Solar Charm", characterExaltSolar, related_name="ownershipCharmSolarTarget_set")
+    owner = NamedForeignKeyField("Solar Exalted Owner", characterExaltSolar, related_name="ownershipCharmSolar_set")
+class ownershipCharmLunar(ownershipBase):
+    target = NamedForeignKeyField("Lunar Charm", characterExaltLunar, related_name="ownershipCharmLunarTarget_set")
+    owner = NamedForeignKeyField("Lunar Exalted Owner", characterExaltLunar, related_name="ownershipCharmLunar_set")
+class ownershipCharmLunarShape(ownershipBase):
+    target = NamedForeignKeyField("Lunar Shape", characterExaltLunar, related_name="ownershipCharmLunarShapeTarget_set")
+    owner = NamedForeignKeyField("Lunar Exalted Owner", characterExaltLunar, related_name="ownershipCharmLunarShape_set")
 
-class ownershipCharmMartialArt(ownershipCharacterExaltBase):
-    target = NamedForeignKeyField("Martial Arts Charm", characterExaltBase)
-class ownershipCharmEvocation(ownershipCharacterExaltBase):
-    target = NamedForeignKeyField("Evocation", characterExaltBase)
-class ownershipCharmSolar(ownershipCharacterExaltSolarBase):
-    target = NamedForeignKeyField("Solar Charm", characterExaltSolar)
-class ownershipCharmLunar(ownershipCharacterExaltLunarBase):
-    target = NamedForeignKeyField("Lunar Charm", characterExaltLunar)
-class ownershipCharmLunarShape(ownershipCharacterExaltLunarBase):
-    target = NamedForeignKeyField("Lunar Shape", characterExaltLunar)
+class ownershipMerit(ownershipBase):
+    target = NamedForeignKeyField("Merit", merit, related_name="ownershipMeritTarget_set")
+    owner = NamedForeignKeyField("Owner", characterBase, related_name="ownershipMerit_set")
 
-class ownershipMerit(ownershipCharacterBase):
-    target = NamedForeignKeyField("Merit", merit)
+class ownershipSpeciality(ownershipBase):
+    target = NamedForeignKeyField("Speciality", speciality, related_name="ownershipSpecialityTarget_set")
+    owner = NamedForeignKeyField("Owner", characterBase, related_name="ownershipSpeciality_set")
 
-class ownershipSpeciality(ownershipCharacterBase):
-    target = NamedForeignKeyField("Speciality", speciality)
-
-class ownershipIntimacyTie(ownershipCharacterBase):
-    target = NamedForeignKeyField("Tie", intimacyTie)
-class ownershipIntimacyPrincipal(ownershipCharacterBase):
-    target = NamedForeignKeyField("Principal", intimacyPrincipal)
+class ownershipIntimacyTie(ownershipBase):
+    target = NamedForeignKeyField("Tie", intimacyTie, related_name="ownershipIntimacyTieTarget_set")
+    owner = NamedForeignKeyField("Owner", characterBase, related_name="ownershipIntimacyTie_set")
+class ownershipIntimacyPrincipal(ownershipBase):
+    target = NamedForeignKeyField("Principal", intimacyPrincipal, related_name="ownershipIntimacyPrincipalTarget_set")
+    owner = NamedForeignKeyField("Owner", characterBase, related_name="ownershipIntimacyPrincipal_set")
