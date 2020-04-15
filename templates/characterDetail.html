@@ -546,13 +546,12 @@
 		</p>
 		{% if object.specialitySet %}
 			{% for speciality in object.specialitySet %}
-				<p style="margin:0">
+				<p style="margin:0" class="w3-row-padding custom-hover-grey custom-hover-text-orange">
 					<span>{{ speciality }}</span>
-					<span class="w3-right custom-hover-text-orange"><i class="fas fa-pen-square"></i></span>
-				<p>
+				</p>
 			{% endfor %}
 		{% else %}
-			<p style="margin:0">No specialities found.<p>
+			<p style="margin:0">No specialities found.</p>
 		{% endif %}
 	</div>
 {% endblock %}
@@ -622,10 +621,22 @@
 		</p>
 		{% if object.meritSet %}
 			{% for merit in object.meritSet %}
-				<p style="margin:0">{{ merit }}<p>
+				<p style="margin:0" class="w3-row-padding custom-hover-grey custom-hover-text-orange w3-display-container">
+					<span>{{ merit }}</span>
+					<span class="w3-display-right">
+						{% for dot in merit.dotsDisplay %}
+							{% if dot %}
+								<i class="fas fa-circle"></i>
+							{% else %}
+								<i class="far fa-circle"></i>
+							{% endif %}
+						{% endfor %}
+						&thinsp;
+					</span>
+				</p>
 			{% endfor %}
 		{% else %}
-			<p style="margin:0">No merits found.<p>
+			<p>No merits found.</p>
 		{% endif %}
 	</div>
 {% endblock %}
@@ -646,7 +657,9 @@
 				{% endfor %}
 			</span>
 		</p>
-		{{ object.limitTrigger }}
+		<p class="w3-center">
+			{{ object.limitTrigger }}
+		</p>
 	</div>
 {% endblock %}
 
@@ -700,7 +713,7 @@
 		<p style="margin:3px" class="fancy w3-center  w3-xlarge">
 			<span class="w3-center"><b>Weapons & Armor</b></span>
 		</p>
-		<table class="w3-table" style="line-height:15px">
+		<table class="w3-table" style="line-height:11px">
 			<tr class="w3-border-bottom custom-border-grey">
 				<th><b>Weapon</b></th>
 				<th>ACC</th>
@@ -708,29 +721,28 @@
 				<th>DEF</th>
 				<th>OVW</th>
 				<th>ATT</th>
-				<th>Range/Parry</th>
 			</tr>
 			{% if object.itemWeaponSet %}
 				{% for weapon in object.itemWeaponSet %}
 					<tr class="custom-hover-grey custom-hover-text-orange">
 						<td>{{ weapon.name }}</td>
+						{% if weapon.rangeClose %}
+							<td>{{ weapon.rangeClose }}/{{ weapon.rangeShort }}/{{ weapon.rangeMedium }}/{{ weapon.rangeLong }}/{{ weapon.rangeExtreme }}</td>
+						{% else %}
 						<td>{{ weapon.accuracy }}</td>
+						{% endif %}
 						<td>{{ weapon.damage }}</td>
 						<td>{{ weapon.defense }}</td>
 						<td>{{ weapon.overwhelming }}</td>
 						<td>{{ weapon.attunement }}</td>
-						{% if weapon.rangeClose %}
-							<td>{{ weapon.rangeClose }}/{{ weapon.rangeShort }}/{{ weapon.rangeMedium }}/{{ weapon.rangeLong }}/{{ weapon.rangeExtreme }}</td>
-						{% else %}
-							<td></td>
-						{% endif %}
 					</tr>
 				{% endfor %}
 			{% else %}
 					<tr><td>No weapons found.</td></tr>
 			{% endif %}
 		</table>
-		<table class="w3-table" style="line-height:15px">
+		<br>
+		<table class="w3-table" style="line-height:11px">
 			<tr class="w3-border-bottom custom-border-grey">
 				<th><b>Armor</b></th>
 				<th>SOAK</th>
@@ -808,6 +820,34 @@
 				<span class="w3-right">{{ object.joinBattle }}</span>
 			</div>
 		</div>
+		<div class="w3-display-container w3-margin-top">
+			<div class="w3-display-topmiddle">
+				<div class="w3-row">
+					{% for level,dot in object.healthDots %}
+						<div class="w3-cell">
+							<p style="margin:0">
+								{% if dot %}
+									&thinsp;
+									<i class="fas fa-circle"></i>
+									&thinsp;
+								{% else %}
+									&thinsp;
+									<i class="far fa-circle"></i>
+									&thinsp;
+								{% endif %}
+							</p>
+							<p style="margin:0; text-align:center;">
+								&thinsp;
+								{{ level }}
+								&thinsp;
+							</p>
+						</div>
+					{% endfor %}
+				</div>
+			</div>
+			<br>
+			<br>
+		</div>
 	</div>
 {% endblock %}
 
@@ -816,30 +856,14 @@
 		<p style="margin:3px" class="fancy w3-center  w3-xlarge">
 			<span class="w3-center"><b>Intimacies</b></span>
 		</p>
-		<table class="w3-table" style="line-height:15px">
+		<table class="w3-table" style="line-height:11px">
 			<tr class="w3-border-bottom custom-border-grey">
-				<th>Principal</th>
-				<th>Intensity</th>
-			</tr>
-			{% if object.intimacyPrincipal_set.all %}
-				{% for tie in object.intimacyPrincipal_set.all %}
-					<tr class="custom-hover-grey custom-hover-text-orange">
-						<td>{{ tie.description }}</td>
-						<td>{{ tie.intensity }}</td>
-					</tr>
-				{% endfor %}
-			{% else %}
-					<tr><td>No principals found.</td></tr>
-			{% endif %}
-		</table>
-		<table class="w3-table" style="line-height:15px">
-			<tr class="w3-border-bottom custom-border-grey">
-				<th>Tie</th>
+				<th>Intimacy</th>
 				<th>Target</th>
 				<th>Intensity</th>
 			</tr>
-			{% if object.intimacyTie_set.all %}
-				{% for tie in object.intimacyTie_set.all %}
+			{% if object.intimacy_set.all %}
+				{% for tie in object.intimacy_set.all %}
 					<tr class="custom-hover-grey custom-hover-text-orange">
 						<td>{{ tie.description }}</td>
 						<td>{{ tie.target }}</td>
@@ -847,7 +871,7 @@
 					</tr>
 				{% endfor %}
 			{% else %}
-					<tr><td>No ties found.</td></tr>
+					<tr><td>No intimacies found.</td></tr>
 			{% endif %}
 		</table>
 	</div>
@@ -858,13 +882,112 @@
 		<p style="margin:3px" class="fancy w3-center  w3-xlarge">
 			<span class="w3-center"><b>Charms</b></span>
 		</p>
+		<table class="w3-table" style="line-height:11px">
+			<tr class="w3-border-bottom custom-border-grey">
+				<th>Charm</th>
+				<th>Type</th>
+				<th>Duration</th>
+				<th>Keywords</th>
+				<th>Description</th>
+			</tr>
+			{% if object.charmSet %}
+				{% for charm in object.charmSet %}
+					<tr class="custom-hover-grey custom-hover-text-orange">
+						<td>{{ charm.name }}</td>
+						<td>{{ charm.charmType }}</td>
+						<td>{{ charm.duration }}</td>
+						<td>{{ charm.keywords }}</td>
+						<td>{{ charm.description }}</td>
+					</tr>
+				{% endfor %}
+			{% else %}
+				<tr><td>No charms found.</td><tr>
+			{% endif %}
+		</table>
+		{% if object.lunarShapeSet %}
+			<br>
+			<table class="w3-table" style="line-height:11px">
+				<tr class="w3-border-bottom custom-border-grey">
+					<th>Shape</th>
+					<th>Type</th>
+					<th>Size</th>
+					<th>Description</th>
+				</tr>
+					{% for charm in object.lunarShapeSet %}
+						<tr class="custom-hover-grey custom-hover-text-orange">
+							<td>{{ charm.name }}</td>
+							<td>{{ charm.shapeType }}</td>
+							<td>{{ charm.size }}</td>
+							<td>{{ charm.description }}</td>
+						</tr>
+					{% endfor %}
+			</table>
+		{% endif %}
+		{% if object.evocationSet %}
+			<br>
+			<table class="w3-table" style="line-height:11px">
+				<tr class="w3-border-bottom custom-border-grey">
+					<th>Evocation</th>
+					<th>Type</th>
+					<th>Duration</th>
+					<th>Keywords</th>
+					<th>Description</th>
+				</tr>
+					{% for charm in object.evocationSet %}
+						<tr class="custom-hover-grey custom-hover-text-orange">
+							<td>{{ charm.name }}</td>
+							<td>{{ charm.charmType }}</td>
+							<td>{{ charm.duration }}</td>
+							<td>{{ charm.keywords }}</td>
+							<td>{{ charm.description }}</td>
+						</tr>
+					{% endfor %}
+			</table>
+		{% endif %}
+		{% if object.martialArtSet %}
+			<br>
+			<table class="w3-table" style="line-height:11px">
+				<tr class="w3-border-bottom custom-border-grey">
+					<th>Charm</th>
+					<th>Type</th>
+					<th>Duration</th>
+					<th>Keywords</th>
+					<th>Description</th>
+				</tr>
+					{% for charm in object.martialArtSet %}
+						<tr class="custom-hover-grey custom-hover-text-orange">
+							<td>{{ charm.name }}</td>
+							<td>{{ charm.charmType }}</td>
+							<td>{{ charm.duration }}</td>
+							<td>{{ charm.keywords }}</td>
+							<td>{{ charm.description }}</td>
+						</tr>
+					{% endfor %}
+			</table>
+		{% endif %}
 	</div>
 {% endblock %}
 
 {% block items %}
 	<div class="w3-large w3-margin-bottom w3-margin-top">
 		<p style="margin:3px" class="fancy w3-center  w3-xlarge">
-			<span class="w3-center"><b>Items</b></span>
+			<span class="w3-center"><b>Inventory</b></span>
 		</p>
+		<table class="w3-table" style="line-height:11px">
+			<tr class="w3-border-bottom custom-border-grey">
+				<th>Item</th>
+				<th>Description</th>
+			</tr>
+			{% if object.itemSet %}
+				{% for item in object.itemSet %}
+					<tr class="custom-hover-grey custom-hover-text-orange">
+						<td>{{ item.name }}</td>
+						<td>{{ item.description }}</td>
+					</tr>
+				{% endfor %}
+			{% else %}
+				<tr><td>No items found.</td><tr>
+			{% endif %}
+		</table>
 	</div>
 {% endblock %}

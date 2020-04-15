@@ -16,6 +16,7 @@ admin.site.register(charmSolar)
 admin.site.register(charmLunar)
 admin.site.register(charmLunarShape)
 admin.site.register(charmEvocation)
+admin.site.register(charmMartialArt)
 
 admin.site.register(merit)
 

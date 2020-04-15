@@ -124,6 +124,7 @@ TAGS_WEAPONS = [
     ),
     (
         "Thrown", (
+            ("Thrown", "Thrown"),
             ("Occult", "Occult"),
             ("Cutting", "Cutting"),
             ("Poisonable", "Poisonable"),
@@ -216,6 +217,15 @@ CASTES_LUNAR = [
     ("Changing Moon", "Changing Moon"),
     ("No Moon", "No Moon"),
     ("Castless", "Castless")
+]
+
+SHAPE_SIZES = [
+    ("Normal", "Normal"),
+]
+
+SHAPE_TYPES = [
+    ("Human", "Human"),
+    ("Animal", "Animal"),
 ]
 
 #==============================================================================#
@@ -923,6 +933,11 @@ class characterBase(PolymorphicModel):
         return ["Healthy"] + ["-0" for i in range(self.health0)] + ["-1" for i in range(self.health1)] + ["-1" for i in range(self.health1)] + ["-4", "i"]
     def healthLevel(self):
         return self.healthTrack()[self.healthIndex]
+    def healthDots(self):
+        output = []
+        for i in range(len(self.healthTrack()) - 1):
+            output.append((self.healthTrack()[i+1], i < self.healthIndex))
+        return output
 
     #============ STATICS =============#
     def resolve(self, speciality=None, mod=0):
@@ -1035,7 +1050,7 @@ class characterExaltLunar(characterExaltBase):
     #========= SHAPESHIFTING ==========#
     spiritShape = models.CharField(verbose_name="Spirit Shape", max_length=100)
     # Reverse relation
-    def shapeSet(self):
+    def lunarShapeSet(self):
         output = []
         try:
             ownerships = self.ownershipCharmLunarShape_set.all()
@@ -1161,30 +1176,49 @@ class charmBase(effectBase):
     keywords = MultiChoiceField("Charm Keywords", CHARM_KEYWORDS)
 
 class charmMartialArt(charmBase):
+    def type(self):
+        return "Martial Art"
     levelKey = NamedIntegerField("Martial Arts Level")
     key = None
 
 class charmEvocation(charmBase):
+    def type(self):
+        return "Evocation"
     levelKey = 0
     key = NamedForeignKeyField("Artifact", itemBase)
 
 class charmSolar(charmBase):
+    def type(self):
+        return "Solar"
     levelKey = NamedIntegerField("Ability Level")
     key = SingleChoiceField("Key Ability", ABILITIES)
 
 class charmLunar(charmBase):
+    def type(self):
+        return "Lunar"
     levelKey = NamedIntegerField("Attribute Level")
     key = SingleChoiceField("Key Attribute", ATTRIBUTES)
 
 class charmLunarShape(charmBase):
     levelKey = 0
+    def type(self):
+        return "Lunar Shape"
     key = None
+    size = SingleChoiceField("Size", SHAPE_SIZES)
+    shapeType = SingleChoiceField("Shape Type", SHAPE_TYPES)
 
 #==============================================================================#
 #----------------------------------- MERITS -----------------------------------#
 #==============================================================================#
 class merit(effectBase):
     dots = DotField("Dots")
+    def dotsDisplay(self):
+        output = []
+        for i in range(self.dots):
+            output.append(True)
+        for i in range(5 - self.dots):
+            output.append(False)
+        return output
 
 #==============================================================================#
 #-------------------------------- SPECIALITIES --------------------------------#
@@ -1200,7 +1234,7 @@ class intimacyBase(PolymorphicModel):
 
     description = DescriptionField()
     intensity = SingleChoiceField("Intensity", INTENSITIES)
-    character = NamedForeignKeyField("Character", characterBase)
+    character = NamedForeignKeyField("Character", characterBase, related_name="intimacy_set")
 
 class intimacyTie(intimacyBase):
     target = NamedCharField("Target")
@@ -1226,19 +1260,19 @@ class ownershipItemArmor(ownershipBase):
     owner = NamedForeignKeyField("Owner", characterBase, related_name="ownershipItemArmor_set")
 
 class ownershipCharmMartialArt(ownershipBase):
-    target = NamedForeignKeyField("Martial Arts Charm", characterExaltBase, related_name="ownershipCharmMartialArtTarget_set")
+    target = NamedForeignKeyField("Martial Arts Charm", charmMartialArt, related_name="ownershipCharmMartialArtTarget_set")
     owner = NamedForeignKeyField("Exalted Owner", characterExaltBase, related_name="ownershipCharmMartialArt_set")
 class ownershipCharmEvocation(ownershipBase):
-    target = NamedForeignKeyField("Evocation", characterExaltBase, related_name="ownershipCharmEvocationTarget_set")
+    target = NamedForeignKeyField("Evocation", charmEvocation, related_name="ownershipCharmEvocationTarget_set")
     owner = NamedForeignKeyField("Exalted Owner", characterExaltBase, related_name="ownershipCharmEvocation_set")
 class ownershipCharmSolar(ownershipBase):
-    target = NamedForeignKeyField("Solar Charm", characterExaltSolar, related_name="ownershipCharmSolarTarget_set")
+    target = NamedForeignKeyField("Solar Charm", charmSolar, related_name="ownershipCharmSolarTarget_set")
     owner = NamedForeignKeyField("Solar Exalted Owner", characterExaltSolar, related_name="ownershipCharmSolar_set")
 class ownershipCharmLunar(ownershipBase):
-    target = NamedForeignKeyField("Lunar Charm", characterExaltLunar, related_name="ownershipCharmLunarTarget_set")
+    target = NamedForeignKeyField("Lunar Charm", charmLunar, related_name="ownershipCharmLunarTarget_set")
     owner = NamedForeignKeyField("Lunar Exalted Owner", characterExaltLunar, related_name="ownershipCharmLunar_set")
 class ownershipCharmLunarShape(ownershipBase):
-    target = NamedForeignKeyField("Lunar Shape", characterExaltLunar, related_name="ownershipCharmLunarShapeTarget_set")
+    target = NamedForeignKeyField("Lunar Shape", charmLunarShape, related_name="ownershipCharmLunarShapeTarget_set")
     owner = NamedForeignKeyField("Lunar Exalted Owner", characterExaltLunar, related_name="ownershipCharmLunarShape_set")
 
 class ownershipMerit(ownershipBase):
