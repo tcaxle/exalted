@@ -1,2 +1,4 @@
 env/
 activate
+app/__pycache__/*
+
