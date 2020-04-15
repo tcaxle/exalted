@@ -419,7 +419,7 @@ class characterBase(PolymorphicModel):
     def effectModifier(self, keyword):
         modifier = 0
         try:
-            ownerships = self.ownershipBase_set.filter(active=True)
+            ownerships = [ownership for ownership in ownershipBase.objects.all() if (ownership.owner == self) and (ownership.active)]
             for ownership in ownerships:
                 try:
                     modifier += ownership.target.modifier(keyword)
@@ -437,7 +437,7 @@ class characterBase(PolymorphicModel):
     #=========== ATTRIBUTES ===========#
     strength = DotField("Strength")
     def attributeStrength(self):
-        return self.strength + self.effectModifier("STRENGTH")
+        return self.strength + self.effectModifier("Strength")
     def dotsStrength(self):
         output = []
         for i in range(self.strength):
@@ -447,7 +447,7 @@ class characterBase(PolymorphicModel):
         return output
     dexterity = DotField("Dexterity")
     def attributeDexterity(self):
-        return self.dexterity + self.effectModifier("DEXTERITY")
+        return self.dexterity + self.effectModifier("Dexterity")
     def dotsDexterity(self):
         output = []
         for i in range(self.dexterity):
@@ -457,7 +457,7 @@ class characterBase(PolymorphicModel):
         return output
     stamina = DotField("Stamina")
     def attributeStamina(self):
-        return self.stamina + self.effectModifier("STAMINA")
+        return self.stamina + self.effectModifier("Stamina")
     def dotsStamina(self):
         output = []
         for i in range(self.stamina):
@@ -467,7 +467,7 @@ class characterBase(PolymorphicModel):
         return output
     charisma = DotField("Charisma")
     def attributeCharisma(self):
-        return self.charisma + self.effectModifier("CHARISMA")
+        return self.charisma + self.effectModifier("Charisma")
     def dotsCharisma(self):
         output = []
         for i in range(self.charisma):
@@ -477,7 +477,7 @@ class characterBase(PolymorphicModel):
         return output
     manipulation = DotField("Manipulation")
     def attributeManipulation(self):
-        return self.manipulation + self.effectModifier("MANIPULATION")
+        return self.manipulation + self.effectModifier("Manipulation")
     def dotsManipulation(self):
         output = []
         for i in range(self.manipulation):
@@ -487,7 +487,7 @@ class characterBase(PolymorphicModel):
         return output
     appearance = DotField("Apperance")
     def attributeAppearance(self):
-        return self.appearance + self.effectModifier("APPEARANCE")
+        return self.appearance + self.effectModifier("Appearance")
     def dotsAppearance(self):
         output = []
         for i in range(self.appearance):
@@ -497,7 +497,7 @@ class characterBase(PolymorphicModel):
         return output
     perception = DotField("Perception")
     def attributePerception(self):
-        return self.perception + self.effectModifier("PERCEPTION")
+        return self.perception + self.effectModifier("Perception")
     def dotsPerception(self):
         output = []
         for i in range(self.perception):
@@ -507,7 +507,7 @@ class characterBase(PolymorphicModel):
         return output
     intelligence = DotField("Intelligence")
     def attributeIntelligence(self):
-        return self.intelligence + self.effectModifier("INTELLIGENCE")
+        return self.intelligence + self.effectModifier("Intelligence")
     def dotsIntelligence(self):
         output = []
         for i in range(self.intelligence):
@@ -517,7 +517,7 @@ class characterBase(PolymorphicModel):
         return output
     wits = DotField("Wits")
     def attributeWits(self):
-        return self.wits + self.effectModifier("WITS")
+        return self.wits + self.effectModifier("Wits")
     def dotsWits(self):
         output = []
         for i in range(self.wits):
@@ -529,7 +529,7 @@ class characterBase(PolymorphicModel):
     #=========== ABILITIES ============#
     archery = DotField("Archery")
     def abilityArchery(self):
-        return self.archery + self.effectModifier("ARCHERY")
+        return self.archery + self.effectModifier("Archery")
     def dotsArchery(self):
         output = []
         for i in range(self.archery):
@@ -539,7 +539,7 @@ class characterBase(PolymorphicModel):
         return output
     athletics = DotField("Athletics")
     def abilityAthletics(self):
-        return self.athletics + self.effectModifier("ATHLETICS")
+        return self.athletics + self.effectModifier("Athletics")
     def dotsAthletics(self):
         output = []
         for i in range(self.athletics):
@@ -549,7 +549,7 @@ class characterBase(PolymorphicModel):
         return output
     awareness = DotField("Awareness")
     def abilityAwareness(self):
-        return self.awareness + self.effectModifier("AWARENESS")
+        return self.awareness + self.effectModifier("Awareness")
     def dotsAwareness(self):
         output = []
         for i in range(self.awareness):
@@ -559,7 +559,7 @@ class characterBase(PolymorphicModel):
         return output
     brawl = DotField("Brawl")
     def abilityBrawl(self):
-        return self.brawl + self.effectModifier("BRAWL")
+        return self.brawl + self.effectModifier("Brawl")
     def dotsBrawl(self):
         output = []
         for i in range(self.brawl):
@@ -569,7 +569,7 @@ class characterBase(PolymorphicModel):
         return output
     bureaucracy = DotField("Bureaucracy")
     def abilityBureaucracy(self):
-        return self.bureaucracy + self.effectModifier("BUREAUCRACY")
+        return self.bureaucracy + self.effectModifier("Bureaucracy")
     def dotsBureaucracy(self):
         output = []
         for i in range(self.bureaucracy):
@@ -579,7 +579,7 @@ class characterBase(PolymorphicModel):
         return output
     craft = DotField("Craft")
     def abilityCraft(self):
-        return self.craft + self.effectModifier("CRAFT")
+        return self.craft + self.effectModifier("Craft")
     def dotsCraft(self):
         output = []
         for i in range(self.craft):
@@ -589,7 +589,7 @@ class characterBase(PolymorphicModel):
         return output
     dodge = DotField("Dodge")
     def abilityDodge(self):
-        return self.dodge + self.effectModifier("DODGE")
+        return self.dodge + self.effectModifier("Dodge")
     def dotsDodge(self):
         output = []
         for i in range(self.dodge):
@@ -599,7 +599,7 @@ class characterBase(PolymorphicModel):
         return output
     integrity = DotField("Integrity")
     def abilityIntegrity(self):
-        return self.integrity + self.effectModifier("INTEGRITY")
+        return self.integrity + self.effectModifier("Integrity")
     def dotsIntegrity(self):
         output = []
         for i in range(self.integrity):
@@ -609,7 +609,7 @@ class characterBase(PolymorphicModel):
         return output
     investigation = DotField("Investigation")
     def abilityInvestigation(self):
-        return self.investigation + self.effectModifier("INVESTIGATION")
+        return self.investigation + self.effectModifier("Investigation")
     def dotsInvestigation(self):
         output = []
         for i in range(self.investigation):
@@ -619,7 +619,7 @@ class characterBase(PolymorphicModel):
         return output
     larceny = DotField("Larceny")
     def abilityLarceny(self):
-        return self.larceny + self.effectModifier("LARCENY")
+        return self.larceny + self.effectModifier("Larceny")
     def dotsLarceny(self):
         output = []
         for i in range(self.larceny):
@@ -629,7 +629,7 @@ class characterBase(PolymorphicModel):
         return output
     linguistics = DotField("Linguistics")
     def abilityLinguistics(self):
-        return self.linguistics + self.effectModifier("LINGUISTICS")
+        return self.linguistics + self.effectModifier("Linguistics")
     def dotsLinguistics(self):
         output = []
         for i in range(self.linguistics):
@@ -639,7 +639,7 @@ class characterBase(PolymorphicModel):
         return output
     lore = DotField("Lore")
     def abilityLore(self):
-        return self.lore + self.effectModifier("LORE")
+        return self.lore + self.effectModifier("Lore")
     def dotsLore(self):
         output = []
         for i in range(self.lore):
@@ -649,7 +649,7 @@ class characterBase(PolymorphicModel):
         return output
     martialArts = DotField("MartialArts")
     def abilityMartialArts(self):
-        return self.martialArts + self.effectModifier("MARTIAL ARTS")
+        return self.martialArts + self.effectModifier("Martial Arts")
     def dotsMartialArts(self):
         output = []
         for i in range(self.martialArts):
@@ -659,7 +659,7 @@ class characterBase(PolymorphicModel):
         return output
     medicine = DotField("Medicine")
     def abilityMedicine(self):
-        return self.medicine + self.effectModifier("MEDICINE")
+        return self.medicine + self.effectModifier("Medicine")
     def dotsMedicine(self):
         output = []
         for i in range(self.medicine):
@@ -669,7 +669,7 @@ class characterBase(PolymorphicModel):
         return output
     melee = DotField("Melee")
     def abilityMelee(self):
-        return self.melee + self.effectModifier("MELEE")
+        return self.melee + self.effectModifier("Melee")
     def dotsMelee(self):
         output = []
         for i in range(self.melee):
@@ -679,7 +679,7 @@ class characterBase(PolymorphicModel):
         return output
     occult = DotField("Occult")
     def abilityOccult(self):
-        return self.occult + self.effectModifier("OCCULT")
+        return self.occult + self.effectModifier("Occult")
     def dotsOccult(self):
         output = []
         for i in range(self.occult):
@@ -689,7 +689,7 @@ class characterBase(PolymorphicModel):
         return output
     performance = DotField("Performance")
     def abilityPerformance(self):
-        return self.performance + self.effectModifier("PERFORMANCE")
+        return self.performance + self.effectModifier("Performance")
     def dotsPerformance(self):
         output = []
         for i in range(self.performance):
@@ -699,7 +699,7 @@ class characterBase(PolymorphicModel):
         return output
     presence = DotField("Presence")
     def abilityPresence(self):
-        return self.presence + self.effectModifier("PRESENCE")
+        return self.presence + self.effectModifier("Presence")
     def dotsPresence(self):
         output = []
         for i in range(self.presence):
@@ -709,7 +709,7 @@ class characterBase(PolymorphicModel):
         return output
     resistance = DotField("Resistance")
     def abilityResistance(self):
-        return self.resistance + self.effectModifier("RESISTANCE")
+        return self.resistance + self.effectModifier("Resistance")
     def dotsResistance(self):
         output = []
         for i in range(self.resistance):
@@ -719,7 +719,7 @@ class characterBase(PolymorphicModel):
         return output
     ride = DotField("Ride")
     def abilityRide(self):
-        return self.ride + self.effectModifier("RIDE")
+        return self.ride + self.effectModifier("Ride")
     def dotsRide(self):
         output = []
         for i in range(self.ride):
@@ -729,7 +729,7 @@ class characterBase(PolymorphicModel):
         return output
     sail = DotField("Sail")
     def abilitySail(self):
-        return self.sail + self.effectModifier("SAIL")
+        return self.sail + self.effectModifier("Sail")
     def dotsSail(self):
         output = []
         for i in range(self.sail):
@@ -739,7 +739,7 @@ class characterBase(PolymorphicModel):
         return output
     socialize = DotField("Socialize")
     def abilitySocialize(self):
-        return self.socialize + self.effectModifier("SOCIALIZE")
+        return self.socialize + self.effectModifier("Socialize")
     def dotsSocialize(self):
         output = []
         for i in range(self.socialize):
@@ -749,7 +749,7 @@ class characterBase(PolymorphicModel):
         return output
     stealth = DotField("Stealth")
     def abilityStealth(self):
-        return self.stealth + self.effectModifier("STEALTH")
+        return self.stealth + self.effectModifier("Stealth")
     def dotsStealth(self):
         output = []
         for i in range(self.stealth):
@@ -759,7 +759,7 @@ class characterBase(PolymorphicModel):
         return output
     survival = DotField("Survival")
     def abilitySurvival(self):
-        return self.survival + self.effectModifier("SURVIVAL")
+        return self.survival + self.effectModifier("Survival")
     def dotsSurvival(self):
         output = []
         for i in range(self.survival):
@@ -769,7 +769,7 @@ class characterBase(PolymorphicModel):
         return output
     thrown = DotField("Thrown")
     def abilityThrown(self):
-        return self.thrown + self.effectModifier("THROWN")
+        return self.thrown + self.effectModifier("Thrown")
     def dotsThrown(self):
         output = []
         for i in range(self.thrown):
@@ -779,7 +779,7 @@ class characterBase(PolymorphicModel):
         return output
     war = DotField("War")
     def abilityWar(self):
-        return self.war + self.effectModifier("WAR")
+        return self.war + self.effectModifier("War")
     def dotsWar(self):
         output = []
         for i in range(self.war):
@@ -814,27 +814,9 @@ class characterBase(PolymorphicModel):
 
     #=========== INTIMACIES ===========#
     # Reverse relation
-    def intimacyTieSet(self):
-        output = []
-        try:
-            ownerships = self.ownershipIntimacyTie_set.all()
-            for ownership in ownerships:
-                output.append(ownership.target)
-        except:
-            pass
-        return output
-    # Reverse relation
-    def intimacyPrincipalSet(self):
-        output = []
-        try:
-            ownerships = self.ownershipIntimacyPrincipal_set.all()
-            for ownership in ownerships:
-                output.append(ownership.target)
-        except:
-            pass
-        return output
-    def intimacySet(self):
-        return self.intimacyTieSet() + self.intimacyPrincipalSet()
+    # character.intimactBase_set.all()
+    # character.intimacyTie_set.object.all()
+    # character.intimacyPrincipal_set.all()
 
     #=========== WILLPOWER ============#
     willpowerMax = NamedIntegerField("Maximum Willpower")
@@ -1218,6 +1200,7 @@ class intimacyBase(PolymorphicModel):
 
     description = DescriptionField()
     intensity = SingleChoiceField("Intensity", INTENSITIES)
+    character = NamedForeignKeyField("Character", characterBase)
 
 class intimacyTie(intimacyBase):
     target = NamedCharField("Target")
@@ -1265,10 +1248,3 @@ class ownershipMerit(ownershipBase):
 class ownershipSpeciality(ownershipBase):
     target = NamedForeignKeyField("Speciality", speciality, related_name="ownershipSpecialityTarget_set")
     owner = NamedForeignKeyField("Owner", characterBase, related_name="ownershipSpeciality_set")
-
-class ownershipIntimacyTie(ownershipBase):
-    target = NamedForeignKeyField("Tie", intimacyTie, related_name="ownershipIntimacyTieTarget_set")
-    owner = NamedForeignKeyField("Owner", characterBase, related_name="ownershipIntimacyTie_set")
-class ownershipIntimacyPrincipal(ownershipBase):
-    target = NamedForeignKeyField("Principal", intimacyPrincipal, related_name="ownershipIntimacyPrincipalTarget_set")
-    owner = NamedForeignKeyField("Owner", characterBase, related_name="ownershipIntimacyPrincipal_set")
