@@ -19,6 +19,7 @@ pip3.8 install django
 pip3.8 install psycopg2 # Needed for postgresql support
 pip3.8 install django-polymorphic # Needed for polymorphic model support
                                # (allows querying of parent models to return children
+pip3.8 install django-multiselectfield
 
 echo "== Creating symbolic link activate -> env/bin/activate =="
 ln -s env/bin/activate activate
