@@ -330,7 +330,7 @@ class NamedOneToOneField(models.OneToOneField):
 #==============================================================================#
 #-------------------------------- DICE ROLLING --------------------------------#
 #==============================================================================#
-class rollConfiguration(PolymorphicModel):
+class RollConfiguration(PolymorphicModel):
     def __str__(self):
         return self.name
     name = NameField()
@@ -397,22 +397,22 @@ class rollConfiguration(PolymorphicModel):
 #==============================================================================#
 #--------------------------------- MODIFIERS ----------------------------------#
 #==============================================================================#
-class modifierBase(PolymorphicModel):
+class ModifierBase(PolymorphicModel):
     value = NamedIntegerField("Modifier Value")
 
-class modifierAttribute(modifierBase):
+class ModifierAttribute(ModifierBase):
     def __str__(self):
         return "{} [{}]".format(self.keyword, self.value)
 
     keyword = SingleChoiceField("Attribute", ATTRIBUTES)
 
-class modifierAbility(modifierBase):
+class ModifierAbility(ModifierBase):
     def __str__(self):
         return "{} [{}]".format(self.keyword, self.value)
 
     keyword = SingleChoiceField("Ability", ABILITIES)
 
-class modifierStatic(modifierBase):
+class ModifierStatic(ModifierBase):
     def __str__(self):
         return "{} [{}]".format(self.keyword, self.value)
 
@@ -421,7 +421,7 @@ class modifierStatic(modifierBase):
 #==============================================================================#
 #--------------------------------- CHARACTERS ---------------------------------#
 #==============================================================================#
-class characterBase(PolymorphicModel):
+class CharacterBase(PolymorphicModel):
     def __str__(self):
         return self.name
 
@@ -970,7 +970,11 @@ class characterBase(PolymorphicModel):
     def disengage(self, mod=0):
         return mod + self.attributeDexterity() + self.abilityDodge() + self.effectModifier("DISENGAGE")
 
-class characterExaltBase(characterBase):
+class CharacterMortal(CharacterBase):
+    def type(self):
+        return "Mortal"
+
+class CharacterExaltBase(CharacterBase):
     anima = models.CharField(verbose_name="Anima", max_length=100)
 
     #============= MOTES ==============#
@@ -1017,11 +1021,7 @@ class characterExaltBase(characterBase):
             pass
         return output
 
-class characterMortal(characterBase):
-    def type(self):
-        return "Mortal"
-
-class characterExaltSolar(characterExaltBase):
+class CharacterExaltSolar(CharacterExaltBase):
     def type(self):
         return "Solar Exalt"
 
@@ -1042,7 +1042,7 @@ class characterExaltSolar(characterExaltBase):
     abilitySupernal = SingleChoiceField("Supernal Ability", ABILITIES)
     abilityFavored = MultiChoiceField("Favoured Abilities", ABILITIES)
 
-class characterExaltLunar(characterExaltBase):
+class CharacterExaltLunar(CharacterExaltBase):
     def type(self):
         return "Lunar Exalt"
 
@@ -1078,20 +1078,20 @@ class characterExaltLunar(characterExaltBase):
 #==============================================================================#
 #----------------------------------- ITEMS ------------------------------------#
 #==============================================================================#
-class itemBase(PolymorphicModel):
+class ItemBase(PolymorphicModel):
     def __str__(self):
         return self.name
 
     name = NameField()
     description = DescriptionField()
 
-class item(itemBase):
+class Item(ItemBase):
     pass
 
 #==============================================================================#
 #---------------------------------- WEAPONS -----------------------------------#
 #==============================================================================#
-class itemWeaponBase(itemBase):
+class ItemWeaponBase(ItemBase):
     category = SingleChoiceField("Category", CATEGORIES)
     tags = MultiChoiceField("Tags", TAGS_WEAPONS)
     accuracy = NamedIntegerField("Accuracy")
@@ -1100,7 +1100,7 @@ class itemWeaponBase(itemBase):
     overwhelming = NamedIntegerField("Overwhelming")
     attunement = NamedIntegerField("Attunement")
 
-class itemWeaponMelee(itemWeaponBase):
+class ItemWeaponMelee(ItemWeaponBase):
     def attack(self, ability, mod=0, withering=True):
         if withering:
             return mod + ability + self.dexterity + weapon.accuracy
@@ -1111,7 +1111,7 @@ class itemWeaponMelee(itemWeaponBase):
             mod += sum([])
         return mod + ceil((self.dexterity + ability) / 2) + weapon.defense
 
-class itemWeaponRanged(itemWeaponBase):
+class ItemWeaponRanged(ItemWeaponBase):
     rangeClose = NamedIntegerField("Close Range")
     rangeShort = NamedIntegerField("Short Range")
     rangeMedium = NamedIntegerField("Medium Range")
@@ -1139,7 +1139,7 @@ class itemWeaponRanged(itemWeaponBase):
 #==============================================================================#
 #----------------------------------- ARMOR ------------------------------------#
 #==============================================================================#
-class itemArmor(itemBase):
+class ItemArmor(ItemBase):
     category = SingleChoiceField("Category", CATEGORIES)
     tags = MultiChoiceField("Tags", TAGS_ARMOR)
     soak = NamedIntegerField("Soak")
@@ -1151,14 +1151,14 @@ class itemArmor(itemBase):
 #---------------------------------- EFFECTS -----------------------------------#
 #==============================================================================#
 
-class effectBase(PolymorphicModel):
+class EffectBase(PolymorphicModel):
     def __str__(self):
         return self.name
 
     name = NameField()
     description = DescriptionField()
-    rollConfiguration = NamedManyToManyField("Roll Configurations", rollConfiguration)
-    modifiers = NamedManyToManyField("Modifiers", modifierBase)
+    rollConfiguration = NamedManyToManyField("Roll Configurations", RollConfiguration)
+    modifiers = NamedManyToManyField("Modifiers", ModifierBase)
     def modifier(self, keyword):
         output = 0
         for modifier in self.modifiers.all():
@@ -1169,37 +1169,37 @@ class effectBase(PolymorphicModel):
 #==============================================================================#
 #----------------------------------- CHARMS -----------------------------------#
 #==============================================================================#
-class charmBase(effectBase):
+class CharmBase(EffectBase):
     levelEssence = NamedIntegerField("Essence Level")
     charmType = SingleChoiceField("Charm Type", CHARM_TYPES)
     duration = SingleChoiceField("Charm Duration", CHARM_DURATIONS)
     keywords = MultiChoiceField("Charm Keywords", CHARM_KEYWORDS)
 
-class charmMartialArt(charmBase):
+class CharmMartialArt(CharmBase):
     def type(self):
         return "Martial Art"
     levelKey = NamedIntegerField("Martial Arts Level")
     key = None
 
-class charmEvocation(charmBase):
+class CharmEvocation(CharmBase):
     def type(self):
         return "Evocation"
     levelKey = 0
-    key = NamedForeignKeyField("Artifact", itemBase)
+    key = NamedForeignKeyField("Artifact", ItemBase)
 
-class charmSolar(charmBase):
+class CharmSolar(CharmBase):
     def type(self):
         return "Solar"
     levelKey = NamedIntegerField("Ability Level")
     key = SingleChoiceField("Key Ability", ABILITIES)
 
-class charmLunar(charmBase):
+class CharmLunar(CharmBase):
     def type(self):
         return "Lunar"
     levelKey = NamedIntegerField("Attribute Level")
     key = SingleChoiceField("Key Attribute", ATTRIBUTES)
 
-class charmLunarShape(charmBase):
+class CharmLunarShape(CharmBase):
     levelKey = 0
     def type(self):
         return "Lunar Shape"
@@ -1210,7 +1210,7 @@ class charmLunarShape(charmBase):
 #==============================================================================#
 #----------------------------------- MERITS -----------------------------------#
 #==============================================================================#
-class merit(effectBase):
+class Merit(EffectBase):
     dots = DotField("Dots")
     def dotsDisplay(self):
         output = []
@@ -1223,62 +1223,62 @@ class merit(effectBase):
 #==============================================================================#
 #-------------------------------- SPECIALITIES --------------------------------#
 #==============================================================================#
-class speciality(effectBase):
+class Speciality(EffectBase):
     pass
 #==============================================================================#
 #--------------------------------- INTIMACIES ---------------------------------#
 #==============================================================================#
-class intimacyBase(PolymorphicModel):
+class IntimacyBase(PolymorphicModel):
     def __str__(self):
         return "[{}] {}".format(self.description, self.intensity)
 
     description = DescriptionField()
     intensity = SingleChoiceField("Intensity", INTENSITIES)
-    character = NamedForeignKeyField("Character", characterBase, related_name="intimacy_set")
+    character = NamedForeignKeyField("Character", CharacterBase, related_name="intimacy_set")
 
-class intimacyTie(intimacyBase):
+class IntimacyTie(IntimacyBase):
     target = NamedCharField("Target")
 
-class intimacyPrincipal(intimacyBase):
+class IntimacyPrincipal(IntimacyBase):
     pass
 
 #==============================================================================#
 #--------------------------------- OWNERSHIP ----------------------------------#
 #==============================================================================#
-class ownershipBase(PolymorphicModel):
+class OwnershipBase(PolymorphicModel):
     notes = models.TextField(verbose_name="Notes", blank=True)
     active = NamedBooleanField("Active/Equipped?")
 
-class ownershipItem(ownershipBase):
-    target = NamedForeignKeyField("Item", item, related_name="ownershipItemTarget_set")
-    owner = NamedForeignKeyField("Owner", characterBase, related_name="ownershipItem_set")
-class ownershipItemWeapon(ownershipBase):
-    target = NamedForeignKeyField("Weapon", itemWeaponBase, related_name="ownershipItemWeaponTarget_set")
-    owner = NamedForeignKeyField("Owner", characterBase, related_name="ownershipItemWeapon_set")
-class ownershipItemArmor(ownershipBase):
-    target = NamedForeignKeyField("Armor", itemArmor, related_name="ownershipItemArmorTarget_set")
-    owner = NamedForeignKeyField("Owner", characterBase, related_name="ownershipItemArmor_set")
+class OwnershipItem(OwnershipBase):
+    target = NamedForeignKeyField("Item", Item, related_name="ownershipItemTarget_set")
+    owner = NamedForeignKeyField("Owner", CharacterBase, related_name="ownershipItem_set")
+class OwnershipItemWeapon(OwnershipBase):
+    target = NamedForeignKeyField("Weapon", ItemWeaponBase, related_name="ownershipItemWeaponTarget_set")
+    owner = NamedForeignKeyField("Owner", CharacterBase, related_name="ownershipItemWeapon_set")
+class OwnershipItemArmor(OwnershipBase):
+    target = NamedForeignKeyField("Armor", ItemArmor, related_name="ownershipItemArmorTarget_set")
+    owner = NamedForeignKeyField("Owner", CharacterBase, related_name="ownershipItemArmor_set")
 
-class ownershipCharmMartialArt(ownershipBase):
-    target = NamedForeignKeyField("Martial Arts Charm", charmMartialArt, related_name="ownershipCharmMartialArtTarget_set")
-    owner = NamedForeignKeyField("Exalted Owner", characterExaltBase, related_name="ownershipCharmMartialArt_set")
-class ownershipCharmEvocation(ownershipBase):
-    target = NamedForeignKeyField("Evocation", charmEvocation, related_name="ownershipCharmEvocationTarget_set")
-    owner = NamedForeignKeyField("Exalted Owner", characterExaltBase, related_name="ownershipCharmEvocation_set")
-class ownershipCharmSolar(ownershipBase):
-    target = NamedForeignKeyField("Solar Charm", charmSolar, related_name="ownershipCharmSolarTarget_set")
-    owner = NamedForeignKeyField("Solar Exalted Owner", characterExaltSolar, related_name="ownershipCharmSolar_set")
-class ownershipCharmLunar(ownershipBase):
-    target = NamedForeignKeyField("Lunar Charm", charmLunar, related_name="ownershipCharmLunarTarget_set")
-    owner = NamedForeignKeyField("Lunar Exalted Owner", characterExaltLunar, related_name="ownershipCharmLunar_set")
-class ownershipCharmLunarShape(ownershipBase):
-    target = NamedForeignKeyField("Lunar Shape", charmLunarShape, related_name="ownershipCharmLunarShapeTarget_set")
-    owner = NamedForeignKeyField("Lunar Exalted Owner", characterExaltLunar, related_name="ownershipCharmLunarShape_set")
+class OwnershipCharmMartialArt(OwnershipBase):
+    target = NamedForeignKeyField("Martial Arts Charm", CharmMartialArt, related_name="ownershipCharmMartialArtTarget_set")
+    owner = NamedForeignKeyField("Exalted Owner", CharacterExaltBase, related_name="ownershipCharmMartialArt_set")
+class OwnershipCharmEvocation(OwnershipBase):
+    target = NamedForeignKeyField("Evocation", CharmEvocation, related_name="ownershipCharmEvocationTarget_set")
+    owner = NamedForeignKeyField("Exalted Owner", CharacterExaltBase, related_name="ownershipCharmEvocation_set")
+class OwnershipCharmSolar(OwnershipBase):
+    target = NamedForeignKeyField("Solar Charm", CharmSolar, related_name="ownershipCharmSolarTarget_set")
+    owner = NamedForeignKeyField("Solar Exalted Owner", CharacterExaltSolar, related_name="ownershipCharmSolar_set")
+class OwnershipCharmLunar(OwnershipBase):
+    target = NamedForeignKeyField("Lunar Charm", CharmLunar, related_name="ownershipCharmLunarTarget_set")
+    owner = NamedForeignKeyField("Lunar Exalted Owner", CharacterExaltLunar, related_name="ownershipCharmLunar_set")
+class OwnershipCharmLunarShape(OwnershipBase):
+    target = NamedForeignKeyField("Lunar Shape", CharmLunarShape, related_name="ownershipCharmLunarShapeTarget_set")
+    owner = NamedForeignKeyField("Lunar Exalted Owner", CharacterExaltLunar, related_name="ownershipCharmLunarShape_set")
 
-class ownershipMerit(ownershipBase):
-    target = NamedForeignKeyField("Merit", merit, related_name="ownershipMeritTarget_set")
-    owner = NamedForeignKeyField("Owner", characterBase, related_name="ownershipMerit_set")
+class OwnershipMerit(OwnershipBase):
+    target = NamedForeignKeyField("Merit", Merit, related_name="ownershipMeritTarget_set")
+    owner = NamedForeignKeyField("Owner", CharacterBase, related_name="ownershipMerit_set")
 
-class ownershipSpeciality(ownershipBase):
-    target = NamedForeignKeyField("Speciality", speciality, related_name="ownershipSpecialityTarget_set")
-    owner = NamedForeignKeyField("Owner", characterBase, related_name="ownershipSpeciality_set")
+class OwnershipSpeciality(OwnershipBase):
+    target = NamedForeignKeyField("Speciality", Speciality, related_name="ownershipSpecialityTarget_set")
+    owner = NamedForeignKeyField("Owner", CharacterBase, related_name="ownershipSpeciality_set")

@@ -7,5 +7,5 @@ class HomePageView(TemplateView):
     template_name = "home.html"
 
 class CharacterDetailView(DetailView):
-    model = characterBase
+    model = CharacterBase
     template_name = "characterDetail.html"
