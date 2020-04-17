@@ -218,7 +218,7 @@ h2:before, h2:after {
 h3 {
 	font-size: 18px;
 }
-h3:before, h2:after {
+h3:before, h3:after {
 	height: 2px;
 }
 h1:before, h1:after, h2:before, h2:after, h3:before, h3:after {

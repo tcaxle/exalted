@@ -3,6 +3,11 @@ from .models import *
 
 admin.site.register(RollConfiguration)
 
+admin.site.register(PropertyBase)
+admin.site.register(PropertyAttribute)
+admin.site.register(PropertyAbility)
+admin.site.register(PropertyStatic)
+
 admin.site.register(ModifierAttribute)
 admin.site.register(ModifierAbility)
 admin.site.register(ModifierStatic)
@@ -29,6 +34,9 @@ admin.site.register(CharacterMortal)
 admin.site.register(CharacterExaltSolar)
 admin.site.register(CharacterExaltLunar)
 
+admin.site.register(OwnershipPropertyAttribute)
+admin.site.register(OwnershipPropertyAbility)
+admin.site.register(OwnershipPropertyStatic)
 admin.site.register(OwnershipItem)
 admin.site.register(OwnershipItemWeapon)
 admin.site.register(OwnershipItemArmor)

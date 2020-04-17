@@ -71,6 +71,19 @@ ABILITIES = [
     ),
 ]
 
+ATTRIBUTE_TYPES = [
+    ("Physical", "Physical"),
+    ("Social", "Social"),
+    ("Mental", "Mental"),
+]
+
+ABILITY_TYPES = [
+    ("War", "War"),
+    ("Life", "Life"),
+    ("Wisdom", "Wisdom"),
+    ("Additional", "Additional")
+]
+
 STATICS = [
     ("Natural Soak", "Natural Soak"),
     ("Armored Soak", "Armored Soak"),
@@ -395,6 +408,23 @@ class RollConfiguration(PolymorphicModel):
         return successes, botch, listRoll, listExploded, listDisappeared
 
 #==============================================================================#
+#--------------------------------- PROPERTIES ---------------------------------#
+#==============================================================================#
+class PropertyBase(PolymorphicModel):
+    name = NameField()
+    description = DescriptionField()
+
+class PropertyAttribute(PropertyBase):
+    propertyType = SingleChoiceField("Type", ATTRIBUTE_TYPES)
+    core = NamedBooleanField("Core?")
+
+class PropertyAbility(PropertyBase):
+    propertyType = SingleChoiceField("Type", ABILITY_TYPES)
+
+class PropertyStatic(PropertyBase):
+    propertyType = None
+
+#==============================================================================#
 #--------------------------------- MODIFIERS ----------------------------------#
 #==============================================================================#
 class ModifierBase(PolymorphicModel):
@@ -426,7 +456,7 @@ class CharacterBase(PolymorphicModel):
         return self.name
 
     #======== MODIFIER METHODS ========#
-    def effectModifier(self, keyword):
+    def effectModifier(self, PropertyBase):
         modifier = 0
         try:
             ownerships = [ownership for ownership in ownershipBase.objects.all() if (ownership.owner == self) and (ownership.active)]
@@ -445,357 +475,28 @@ class CharacterBase(PolymorphicModel):
     concept = models.TextField(blank=True)
 
     #=========== ATTRIBUTES ===========#
-    strength = DotField("Strength")
-    def attributeStrength(self):
-        return self.strength + self.effectModifier("Strength")
-    def dotsStrength(self):
-        output = []
-        for i in range(self.strength):
-            output.append(True)
-        for i in range(5 - self.strength):
-            output.append(False)
-        return output
-    dexterity = DotField("Dexterity")
-    def attributeDexterity(self):
-        return self.dexterity + self.effectModifier("Dexterity")
-    def dotsDexterity(self):
-        output = []
-        for i in range(self.dexterity):
-            output.append(True)
-        for i in range(5 - self.dexterity):
-            output.append(False)
-        return output
-    stamina = DotField("Stamina")
-    def attributeStamina(self):
-        return self.stamina + self.effectModifier("Stamina")
-    def dotsStamina(self):
-        output = []
-        for i in range(self.stamina):
-            output.append(True)
-        for i in range(5 - self.stamina):
-            output.append(False)
-        return output
-    charisma = DotField("Charisma")
-    def attributeCharisma(self):
-        return self.charisma + self.effectModifier("Charisma")
-    def dotsCharisma(self):
-        output = []
-        for i in range(self.charisma):
-            output.append(True)
-        for i in range(5 - self.charisma):
-            output.append(False)
-        return output
-    manipulation = DotField("Manipulation")
-    def attributeManipulation(self):
-        return self.manipulation + self.effectModifier("Manipulation")
-    def dotsManipulation(self):
-        output = []
-        for i in range(self.manipulation):
-            output.append(True)
-        for i in range(5 - self.manipulation):
-            output.append(False)
-        return output
-    appearance = DotField("Apperance")
-    def attributeAppearance(self):
-        return self.appearance + self.effectModifier("Appearance")
-    def dotsAppearance(self):
-        output = []
-        for i in range(self.appearance):
-            output.append(True)
-        for i in range(5 - self.appearance):
-            output.append(False)
-        return output
-    perception = DotField("Perception")
-    def attributePerception(self):
-        return self.perception + self.effectModifier("Perception")
-    def dotsPerception(self):
-        output = []
-        for i in range(self.perception):
-            output.append(True)
-        for i in range(5 - self.perception):
-            output.append(False)
-        return output
-    intelligence = DotField("Intelligence")
-    def attributeIntelligence(self):
-        return self.intelligence + self.effectModifier("Intelligence")
-    def dotsIntelligence(self):
-        output = []
-        for i in range(self.intelligence):
-            output.append(True)
-        for i in range(5 - self.intelligence):
-            output.append(False)
-        return output
-    wits = DotField("Wits")
-    def attributeWits(self):
-        return self.wits + self.effectModifier("Wits")
-    def dotsWits(self):
-        output = []
-        for i in range(self.wits):
-            output.append(True)
-        for i in range(5 - self.wits):
-            output.append(False)
-        return output
+    # Reverse Reference
+    def attributeSet(self):
+        try:
+            return [ownership.target for ownership in self.OwnershipPropertyAttribute_set.all()]
+        except:
+            return None
 
     #=========== ABILITIES ============#
-    archery = DotField("Archery")
-    def abilityArchery(self):
-        return self.archery + self.effectModifier("Archery")
-    def dotsArchery(self):
+    # Reverse Reference
+    def abilitySet(self):
         output = []
-        for i in range(self.archery):
-            output.append(True)
-        for i in range(5 - self.archery):
-            output.append(False)
-        return output
-    athletics = DotField("Athletics")
-    def abilityAthletics(self):
-        return self.athletics + self.effectModifier("Athletics")
-    def dotsAthletics(self):
-        output = []
-        for i in range(self.athletics):
-            output.append(True)
-        for i in range(5 - self.athletics):
-            output.append(False)
-        return output
-    awareness = DotField("Awareness")
-    def abilityAwareness(self):
-        return self.awareness + self.effectModifier("Awareness")
-    def dotsAwareness(self):
-        output = []
-        for i in range(self.awareness):
-            output.append(True)
-        for i in range(5 - self.awareness):
-            output.append(False)
-        return output
-    brawl = DotField("Brawl")
-    def abilityBrawl(self):
-        return self.brawl + self.effectModifier("Brawl")
-    def dotsBrawl(self):
-        output = []
-        for i in range(self.brawl):
-            output.append(True)
-        for i in range(5 - self.brawl):
-            output.append(False)
-        return output
-    bureaucracy = DotField("Bureaucracy")
-    def abilityBureaucracy(self):
-        return self.bureaucracy + self.effectModifier("Bureaucracy")
-    def dotsBureaucracy(self):
-        output = []
-        for i in range(self.bureaucracy):
-            output.append(True)
-        for i in range(5 - self.bureaucracy):
-            output.append(False)
-        return output
-    craft = DotField("Craft")
-    def abilityCraft(self):
-        return self.craft + self.effectModifier("Craft")
-    def dotsCraft(self):
-        output = []
-        for i in range(self.craft):
-            output.append(True)
-        for i in range(5 - self.craft):
-            output.append(False)
-        return output
-    dodge = DotField("Dodge")
-    def abilityDodge(self):
-        return self.dodge + self.effectModifier("Dodge")
-    def dotsDodge(self):
-        output = []
-        for i in range(self.dodge):
-            output.append(True)
-        for i in range(5 - self.dodge):
-            output.append(False)
-        return output
-    integrity = DotField("Integrity")
-    def abilityIntegrity(self):
-        return self.integrity + self.effectModifier("Integrity")
-    def dotsIntegrity(self):
-        output = []
-        for i in range(self.integrity):
-            output.append(True)
-        for i in range(5 - self.integrity):
-            output.append(False)
-        return output
-    investigation = DotField("Investigation")
-    def abilityInvestigation(self):
-        return self.investigation + self.effectModifier("Investigation")
-    def dotsInvestigation(self):
-        output = []
-        for i in range(self.investigation):
-            output.append(True)
-        for i in range(5 - self.investigation):
-            output.append(False)
-        return output
-    larceny = DotField("Larceny")
-    def abilityLarceny(self):
-        return self.larceny + self.effectModifier("Larceny")
-    def dotsLarceny(self):
-        output = []
-        for i in range(self.larceny):
-            output.append(True)
-        for i in range(5 - self.larceny):
-            output.append(False)
-        return output
-    linguistics = DotField("Linguistics")
-    def abilityLinguistics(self):
-        return self.linguistics + self.effectModifier("Linguistics")
-    def dotsLinguistics(self):
-        output = []
-        for i in range(self.linguistics):
-            output.append(True)
-        for i in range(5 - self.linguistics):
-            output.append(False)
-        return output
-    lore = DotField("Lore")
-    def abilityLore(self):
-        return self.lore + self.effectModifier("Lore")
-    def dotsLore(self):
-        output = []
-        for i in range(self.lore):
-            output.append(True)
-        for i in range(5 - self.lore):
-            output.append(False)
-        return output
-    martialArts = DotField("MartialArts")
-    def abilityMartialArts(self):
-        return self.martialArts + self.effectModifier("Martial Arts")
-    def dotsMartialArts(self):
-        output = []
-        for i in range(self.martialArts):
-            output.append(True)
-        for i in range(5 - self.martialArts):
-            output.append(False)
-        return output
-    medicine = DotField("Medicine")
-    def abilityMedicine(self):
-        return self.medicine + self.effectModifier("Medicine")
-    def dotsMedicine(self):
-        output = []
-        for i in range(self.medicine):
-            output.append(True)
-        for i in range(5 - self.medicine):
-            output.append(False)
-        return output
-    melee = DotField("Melee")
-    def abilityMelee(self):
-        return self.melee + self.effectModifier("Melee")
-    def dotsMelee(self):
-        output = []
-        for i in range(self.melee):
-            output.append(True)
-        for i in range(5 - self.melee):
-            output.append(False)
-        return output
-    occult = DotField("Occult")
-    def abilityOccult(self):
-        return self.occult + self.effectModifier("Occult")
-    def dotsOccult(self):
-        output = []
-        for i in range(self.occult):
-            output.append(True)
-        for i in range(5 - self.occult):
-            output.append(False)
-        return output
-    performance = DotField("Performance")
-    def abilityPerformance(self):
-        return self.performance + self.effectModifier("Performance")
-    def dotsPerformance(self):
-        output = []
-        for i in range(self.performance):
-            output.append(True)
-        for i in range(5 - self.performance):
-            output.append(False)
-        return output
-    presence = DotField("Presence")
-    def abilityPresence(self):
-        return self.presence + self.effectModifier("Presence")
-    def dotsPresence(self):
-        output = []
-        for i in range(self.presence):
-            output.append(True)
-        for i in range(5 - self.presence):
-            output.append(False)
-        return output
-    resistance = DotField("Resistance")
-    def abilityResistance(self):
-        return self.resistance + self.effectModifier("Resistance")
-    def dotsResistance(self):
-        output = []
-        for i in range(self.resistance):
-            output.append(True)
-        for i in range(5 - self.resistance):
-            output.append(False)
-        return output
-    ride = DotField("Ride")
-    def abilityRide(self):
-        return self.ride + self.effectModifier("Ride")
-    def dotsRide(self):
-        output = []
-        for i in range(self.ride):
-            output.append(True)
-        for i in range(5 - self.ride):
-            output.append(False)
-        return output
-    sail = DotField("Sail")
-    def abilitySail(self):
-        return self.sail + self.effectModifier("Sail")
-    def dotsSail(self):
-        output = []
-        for i in range(self.sail):
-            output.append(True)
-        for i in range(5 - self.sail):
-            output.append(False)
-        return output
-    socialize = DotField("Socialize")
-    def abilitySocialize(self):
-        return self.socialize + self.effectModifier("Socialize")
-    def dotsSocialize(self):
-        output = []
-        for i in range(self.socialize):
-            output.append(True)
-        for i in range(5 - self.socialize):
-            output.append(False)
-        return output
-    stealth = DotField("Stealth")
-    def abilityStealth(self):
-        return self.stealth + self.effectModifier("Stealth")
-    def dotsStealth(self):
-        output = []
-        for i in range(self.stealth):
-            output.append(True)
-        for i in range(5 - self.stealth):
-            output.append(False)
-        return output
-    survival = DotField("Survival")
-    def abilitySurvival(self):
-        return self.survival + self.effectModifier("Survival")
-    def dotsSurvival(self):
-        output = []
-        for i in range(self.survival):
-            output.append(True)
-        for i in range(5 - self.survival):
-            output.append(False)
-        return output
-    thrown = DotField("Thrown")
-    def abilityThrown(self):
-        return self.thrown + self.effectModifier("Thrown")
-    def dotsThrown(self):
-        output = []
-        for i in range(self.thrown):
-            output.append(True)
-        for i in range(5 - self.thrown):
-            output.append(False)
-        return output
-    war = DotField("War")
-    def abilityWar(self):
-        return self.war + self.effectModifier("War")
-    def dotsWar(self):
-        output = []
-        for i in range(self.war):
-            output.append(True)
-        for i in range(5 - self.war):
-            output.append(False)
+        try:
+            ownerships = self.ownershipPropertyAbility_set.order_by("target__name")
+            output.append(("War", [ownership for ownership in ownerships if ownership.target.propertyType=="War"]))
+            output.append(("Life", [ownership for ownership in ownerships if ownership.target.propertyType=="Life"]))
+            output.append(("Wisdom", [ownership for ownership in ownerships if ownership.target.propertyType=="Wisdom"]))
+            output.append(("Additional", [ownership for ownership in ownerships if ownership.target.propertyType=="Additional"]))
+        except:
+            output.append(("War", []))
+            output.append(("Life", []))
+            output.append(("Wisdom", []))
+            output.append(("Additional", []))
         return output
 
     #============= MERITS =============#
@@ -940,35 +641,35 @@ class CharacterBase(PolymorphicModel):
         return output
 
     #============ STATICS =============#
-    def resolve(self, speciality=None, mod=0):
-        return mod + ceil((self.attributeWits() + self.abilityIntegrity()) / 2) + self.effectModifier("RESOLVE")
-
-    def guile(self, speciality=None, mod=0):
-        return mod + ceil((self.attributeManipulation() + self.abilitySocialize()) / 2) + self.effectModifier("GUILE")
-
-    def soakNatural(self, mod=0):
-        return mod + self.attributeStamina() + self.effectModifier("SOAK NATURAL")
-
-    def soakArmored(self, mod=0):
-        return mod + self.armorSoak()
-
-    def soakTotal(self, mod=0):
-        return mod + self.soakNatural() + self.soakArmored()
-
-    def hardness(self, mod=0):
-        return mod + self.armorHardness() + self.effectModifier("HARDNESS")
-
-    def joinBattle(self, mod=0):
-        return mod + self.attributeWits() + self.abilityAwareness() + 3 + self.effectModifier("JOIN BATTLE")
-
-    def evasion(self, mod=0):
-        return mod + ceil((self.attributeDexterity() + self.abilityDodge()) / 2) - self.armorMobilityPenalty() + self.effectModifier("EVASION")
-
-    def rush(self, mod=0):
-        return mod + self.attributeDexterity() + self.abilityAthletics() + self.effectModifier("RUSH")
-
-    def disengage(self, mod=0):
-        return mod + self.attributeDexterity() + self.abilityDodge() + self.effectModifier("DISENGAGE")
+#    def resolve(self, speciality=None, mod=0):
+#        return mod + ceil((self.attributeWits() + self.abilityIntegrity()) / 2) + self.effectModifier("RESOLVE")
+#
+#    def guile(self, speciality=None, mod=0):
+#        return mod + ceil((self.attributeManipulation() + self.abilitySocialize()) / 2) + self.effectModifier("GUILE")
+#
+#    def soakNatural(self, mod=0):
+#        return mod + self.attributeStamina() + self.effectModifier("SOAK NATURAL")
+#
+#    def soakArmored(self, mod=0):
+#        return mod + self.armorSoak()
+#
+#    def soakTotal(self, mod=0):
+#        return mod + self.soakNatural() + self.soakArmored()
+#
+#    def hardness(self, mod=0):
+#        return mod + self.armorHardness() + self.effectModifier("HARDNESS")
+#
+#    def joinBattle(self, mod=0):
+#        return mod + self.attributeWits() + self.abilityAwareness() + 3 + self.effectModifier("JOIN BATTLE")
+#
+#    def evasion(self, mod=0):
+#        return mod + ceil((self.attributeDexterity() + self.abilityDodge()) / 2) - self.armorMobilityPenalty() + self.effectModifier("EVASION")
+#
+#    def rush(self, mod=0):
+#        return mod + self.attributeDexterity() + self.abilityAthletics() + self.effectModifier("RUSH")
+#
+#    def disengage(self, mod=0):
+#        return mod + self.attributeDexterity() + self.abilityDodge() + self.effectModifier("DISENGAGE")
 
 class CharacterMortal(CharacterBase):
     def type(self):
@@ -1258,6 +959,32 @@ class OwnershipItemWeapon(OwnershipBase):
 class OwnershipItemArmor(OwnershipBase):
     target = NamedForeignKeyField("Armor", ItemArmor, related_name="ownershipItemArmorTarget_set")
     owner = NamedForeignKeyField("Owner", CharacterBase, related_name="ownershipItemArmor_set")
+
+class OwnershipPropertyAttribute(OwnershipBase):
+    target = NamedForeignKeyField("Attribute", PropertyAttribute, related_name="ownershipPropertyAttributeTarget_set")
+    character = NamedForeignKeyField("Owner", CharacterBase, related_name="ownershipPropertyAttribute_set")
+    value = NamedIntegerField("Dots")
+    def dots(self):
+        output = []
+        for i in range(self.value):
+            output.append(True)
+        for i in range(5 - self.value):
+            output.append(False)
+        return output
+class OwnershipPropertyAbility(OwnershipBase):
+    target = NamedForeignKeyField("Ability", PropertyAbility, related_name="ownershipPropertyAbilityTarget_set")
+    character = NamedForeignKeyField("Owner", CharacterBase, related_name="ownershipPropertyAbility_set")
+    value = NamedIntegerField("Dots")
+    def dots(self):
+        output = []
+        for i in range(self.value):
+            output.append(True)
+        for i in range(5 - self.value):
+            output.append(False)
+        return output
+class OwnershipPropertyStatic(OwnershipBase):
+    target = NamedForeignKeyField("Static", PropertyStatic, related_name="ownershipPropertyStaticTarget_set")
+    character = NamedForeignKeyField("Owner", CharacterBase, related_name="ownershipPropertyStaticTarget_set")
 
 class OwnershipCharmMartialArt(OwnershipBase):
     target = NamedForeignKeyField("Martial Arts Charm", CharmMartialArt, related_name="ownershipCharmMartialArtTarget_set")
