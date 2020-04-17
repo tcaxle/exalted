@@ -89,6 +89,22 @@
 		transparent 100%);
 }
 
+/* Accordions */
+.accordion,.trAccordion {
+	cursor: pointer;
+	outline: none;
+	transition: 0.4s;
+}
+.accordionActive {
+	background-color:#40545c;
+	color:#e8a951;
+}
+.accordionPanel,.accordionRow {
+	color:#40545c;
+	display: none;
+	overflow: hidden;
+}
+
 /* W3.CSS 4.13 June 2019 by Jan Egil and Borge Refsnes */
 html{box-sizing:border-box}*,*:before,*:after{box-sizing:inherit}
 /* Extract from normalize.css by Nicolas Gallagher and Jonathan Neal git.io/normalize */
