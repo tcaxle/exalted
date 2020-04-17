@@ -595,8 +595,8 @@
 	<h2>Specialities</h2>
 	{% if object.specialitySet %}
 		{% for speciality in object.specialitySet %}
-			<p class="hover-grey accordion"><i class="far fa-square"></i> {{ speciality }}</p>
-			<p class="accordionPanel"><i class="fas fa-level-up-alt fa-rotate-90"></i>
+			<p class="hover-grey accordion">&thinsp;<i class="far fa-square"></i> {{ speciality }}</p>
+			<p class="accordionPanel">&emsp;<i class="fas fa-level-up-alt fa-rotate-90"></i>
 				{% if speciality.description %}
 					{{ speciality.description }}
 				{% else %}
@@ -605,7 +605,7 @@
 			</p>
 		{% endfor %}
 	{% else %}
-		<p style="margin:0">No specialities found.</p>
+		<p>No specialities found.</p>
 	{% endif %}
 {% endblock %}
 
