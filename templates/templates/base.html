@@ -1,55 +1,40 @@
 <!DOCTYPE html>
 {% load static %}
 
-<html class="custom-grey">
+<html>
 	<title>W3.CSS Template</title>
 	<meta charset="UTF-8">
 	<meta name="viewport" content="width=device-width, initial-scale=1">
-	<link rel="stylesheet" href="{% static 'css/w3.css' %}">
+	<link rel="stylesheet" href="{% static 'css/style.css' %}">
 	<link rel="stylesheet" href="{% static 'css/fonts.css' %}">
 	<link rel="stylesheet" href="{% static 'css/font-awesome.css' %}">
-	<style>
-		html,body,h1,h2,h3,h4,h5,h6 {font-family: 'Marcellus SC', serif;}
-	</style>
-	<body style="background-image: url({% static 'images/tiling/crackedStone.jpg' %}); background-attachment: fixed; background-position: center;">
-		<div class="w3-top custom-grey custom-text-orange w3-card">
-			<div class="w3-bar w3-medium">
-				<span class="w3-display-topmiddle w3-padding"><i class="fas fa-eclipse w3-xlarge"></i></span>
-				<a href="#" class="w3-bar-item w3-button custom-hover-orange custom-hover-text-grey"><i class="fas fa-home-alt"></i> <span class="w3-hide-medium">Home</span></a>
-				<a href="#" class="w3-bar-item w3-button w3-hide-small custom-hover-orange custom-hover-text-grey"><i class="fas fa-users"></i> <span class="w3-hide-medium">Characters</span></a>
-				<a href="#" class="w3-bar-item w3-button w3-hide-small custom-hover-orange custom-hover-text-grey w3-right"><i class="fas fa-sign-out-alt"></i> <span class="w3-hide-medium">Log Out</span></a>
-				<a href="#" class="w3-bar-item w3-button w3-hide-small custom-hover-orange custom-hover-text-grey w3-right"><i class="fas fa-user-circle"></i> <span class="w3-hide-medium">My Account</span></a>
-				<a href="javascript:void(0)" class="w3-bar-item w3-button custom-hover-orange custon-hover-text-grey w3-right w3-hide-large w3-hide-medium" onclick="myFunction()"><i class="far fa-bars"></i></a>
-			</div>
-			<div id="mobileBar" class="w3-bar-block custom-grey custom-text-orange w3-hide w3-hide-large w3-hide-medium">
-				<a href="#" class="w3-bar-item w3-button custom-hover-orange custom-hover-text-grey"><i class="fas fa-users"></i> <span class="w3-hide-medium">Characters</span></a>
-				<a href="#" class="w3-bar-item w3-button custom-hover-orange custom-hover-text-grey"><i class="fas fa-user-circle"></i> <span class="w3-hide-medium">My Account</span></a>
-				<a href="#" class="w3-bar-item w3-button custom-hover-orange custom-hover-text-grey"><i class="fas fa-sign-out-alt"></i> <span class="w3-hide-medium">Log Out</span></a>
-			</div>
+	<body>
+		<div class="bar shadow-2">
+			<a href="#" class="bar-item button hover-orange">
+				<i class="fas fa-home"></i>
+				<span class="hide-medium hide-small">Home</span>
+			</a>
+			<a href="#" class="bar-item button hover-orange">
+				<i class="fas fa-users"></i> <span class="hide-medium hide-small">Characters</span>
+			</a>
+			<a href="#" class="bar-item button hover-orange" style="float: right;">
+				<i class="fas fa-sign-out-alt"></i> <span class="hide-medium hide-small">Log Out</span>
+			</a>
+			<a href="#" class="bar-item button hover-orange" style="float: right;">
+				<i class="fas fa-user-circle"></i> <span class="hide-medium hide-small">My Account</span>
+			</a>
 		</div>
-		<script>
-			function myFunction() {
-				var x = document.getElementById("mobileBar");
-					if (x.className.indexOf("w3-show") == -1) {
-					x.className += " w3-show";
-				} else {
-					x.className = x.className.replace(" w3-show", "");
-				}
-			}
-		</script>
-		<br><br>
 
-		<!-- Page Container -->
-		<div class="w3-content w3-margin-top" style="max-width:1800px;">
+		<div class="page">
 			{% block content %}
 			{% endblock %}
-		<!-- End Page Container -->
 		</div>
 
-		<footer class="w3-container w3-card custom-grey custom-text-orange w3-center w3-margin-top">
-			<p>Lorem Ipsum placeholder</p>
+		<footer class="shadow-2">
+			<p class="orange center">Lorem Ipsum placeholder</p>
 		</footer>
 
 	</body>
 	<script type="text/javascript" src="{% static 'js/accordion.js' %}"></script>
+	<script type="text/javascript" src="{% static 'js/dropDownMenu.js' %}"></script>
 </html>

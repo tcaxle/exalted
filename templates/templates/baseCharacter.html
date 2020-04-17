@@ -1,109 +1,39 @@
 {% extends 'templates/base.html' %}
-{% load static %}
 
 {% block content %}
-<div class="w3-cell-row w3-row-padding">
-	<!-- Left Column -->
-	<div class="w3-cell w3-row w3-mobile">
-		<div class="custom-text-grey w3-card-4 w3-margin-bottom" style="background-image: url({% static 'images/tiling/manuscript.jpg' %})">
-			<div class="w3-container">
-				{% block general %}
-				{% endblock %}
-			</div>
-		</div>
-		<div class="custom-text-grey w3-card-4 w3-margin-bottom" style="background-image: url({% static 'images/tiling/manuscript.jpg' %})">
-			<div class="w3-container">
-				{% block abilities %}
-				{% endblock %}
-			</div>
-		</div>
+	<div class="grid-wrapper">
+		<div class="cell01">{% block general %}{% endblock %}</div>
+		<div class="cell02">{% block abilities %}{% endblock %}</div>
+		<div class="cell03">{% block attributes %}{% endblock %}</div>
+		<div class="cell04">{% block specialities %}{% endblock %}</div>
+		<div class="cell05">{% block willpower %}{% endblock %}</div>
+		<div class="cell06">{% block essence %}{% endblock %}</div>
+		<div class="cell07">{% block merits %}{% endblock %}</div>
+		<div class="cell08">{% block limit %}{% endblock %}</div>
+		<div class="cell09">{% block experience %}{% endblock %}</div>
+		<div class="cell10">{% block weapons_armor %}{% endblock %}</div>
+		<div class="cell11">{% block health_defense %}{% endblock %}</div>
+		<div class="cell12">{% block intimacies %}{% endblock %}</div>
+		<div class="cell13">{% block charms %}{% endblock %}</div>
+		<div class="cell14">{% block items %}{% endblock %}</div>
 	</div>
-
-	<div class="w3-cell w3-cell-middle w3-hide-small">&emsp;</div>
-
-	<!-- Right Column -->
-	<div class="w3-cell w3-row w3-mobile">
-		<div class="w3-card-4 custom-text-grey w3-margin-bottom" style="background-image: url({% static 'images/tiling/manuscript.jpg' %})">
-			<div class="w3-container">
-				{% block attributes %}
-				{% endblock %}
-			</div>
-		</div>
-		<div class="w3-cell-row">
-			<div class="w3-cell w3-mobile">
-				<div class="w3-card-4 custom-text-grey w3-margin-bottom" style="background-image: url({% static 'images/tiling/manuscript.jpg' %})">
-					<div class="w3-container">
-						{% block specialities %}
-						{% endblock %}
-					</div>
-				</div>
-				<div class="w3-card-4 custom-text-grey w3-margin-bottom" style="background-image: url({% static 'images/tiling/manuscript.jpg' %})">
-					<div class="w3-container">
-						{% block willpower %}
-						{% endblock %}
-					</div>
-				</div>
-				<div class="w3-card-4 custom-text-grey w3-margin-bottom" style="background-image: url({% static 'images/tiling/manuscript.jpg' %})">
-					<div class="w3-container">
-						{% block essence %}
-						{% endblock %}
-					</div>
-				</div>
-			</div>
-			<div class="w3-cell w3-cell-middle w3-hide-small">&emsp;</div>
-			<div class="w3-cell w3-mobile">
-				<div class="w3-card-4 custom-text-grey w3-margin-bottom" style="background-image: url({% static 'images/tiling/manuscript.jpg' %})">
-					<div class="w3-container">
-						{% block merits %}
-						{% endblock %}
-					</div>
-				</div>
-				<div class="w3-card-4 custom-text-grey w3-margin-bottom" style="background-image: url({% static 'images/tiling/manuscript.jpg' %})">
-					<div class="w3-container">
-						{% block limit %}
-						{% endblock %}
-					</div>
-				</div>
-			</div>
-		</div>
-		<div class="w3-card-4 custom-text-grey w3-margin-bottom" style="background-image: url({% static 'images/tiling/manuscript.jpg' %})">
-			<div class="w3-container">
-				{% block experience %}
-				{% endblock %}
-			</div>
-		</div>
-		<div class="w3-card-4 custom-text-grey w3-margin-bottom" style="background-image: url({% static 'images/tiling/manuscript.jpg' %})">
-			<div class="w3-container">
-				{% block weapons_armor %}
-				{% endblock %}
-			</div>
-		</div>
-	</div>
-</div>
-<div class="w3-row-padding">
-	<div class="w3-card-4 custom-text-grey w3-margin-bottom" style="background-image: url({% static 'images/tiling/manuscript.jpg' %})">
-		<div class="w3-container">
-			{% block health_defense %}
-			{% endblock %}
-		</div>
-	</div>
-	<div class="w3-card-4 custom-text-grey w3-margin-bottom" style="background-image: url({% static 'images/tiling/manuscript.jpg' %})">
-		<div class="w3-container">
-			{% block intimacies %}
-			{% endblock %}
-		</div>
-	</div>
-	<div class="w3-card-4 custom-text-grey w3-margin-bottom" style="background-image: url({% static 'images/tiling/manuscript.jpg' %})">
-		<div class="w3-container">
-			{% block charms %}
-			{% endblock %}
-		</div>
-	</div>
-	<div class="w3-card-4 custom-text-grey w3-margin-bottom" style="background-image: url({% static 'images/tiling/manuscript.jpg' %})">
-		<div class="w3-container">
-			{% block items %}
-			{% endblock %}
-		</div>
-	</div>
-</div>
+	<style>
+	@media (min-width: 601px) {
+		.grid-wrapper{grid-template-columns: 1fr 1fr 1fr;}
+		.cell01{grid-column-start:01; grid-column-end:02; grid-row-start:01; grid-row-end:02;}
+		.cell02{grid-column-start:01; grid-column-end:02; grid-row-start:02; grid-row-end:06;}
+		.cell03{grid-column-start:02; grid-column-end:04; grid-row-start:01; grid-row-end:02;}
+		.cell04{grid-column-start:02; grid-column-end:03; grid-row-start:02; grid-row-end:03;}
+		.cell05{grid-column-start:02; grid-column-end:02; grid-row-start:03; grid-row-end:04;}
+		.cell06{grid-column-start:02; grid-column-end:03; grid-row-start:04; grid-row-end:05;}
+		.cell07{grid-column-start:03; grid-column-end:04; grid-row-start:02; grid-row-end:03;}
+		.cell08{grid-column-start:03; grid-column-end:04; grid-row-start:03; grid-row-end:05;}
+		.cell09{grid-column-start:02; grid-column-end:04; grid-row-start:05; grid-row-end:06;}
+		.cell10{grid-column-start:01; grid-column-end:04; grid-row-start:06; grid-row-end:07;}
+		.cell11{grid-column-start:01; grid-column-end:04; grid-row-start:07; grid-row-end:08;}
+		.cell12{grid-column-start:01; grid-column-end:04; grid-row-start:08; grid-row-end:09;}
+		.cell13{grid-column-start:01; grid-column-end:04; grid-row-start:09; grid-row-end:10;}
+		.cell14{grid-column-start:01; grid-column-end:04; grid-row-start:10; grid-row-end:11;}
+	}
+	</style>
 {% endblock %}

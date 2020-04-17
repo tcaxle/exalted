@@ -1,51 +1,30 @@
 {% extends 'templates/baseCharacter.html' %}
 
 {% block general %}
-	<div style="min-width:300px" class="w3-large w3-margin-bottom w3-margin-top">
-		<p style="margin:0">
-			<span>{{ object.type }}</span>
-			<span class="w3-right">Player: {{ object.player }}</span>
-		</p>
-		<p style="margin:0px" class="w3-jumbo w3-center fancy-big"><span>
-			<b>{{ object.name }}</b>
-		</span></p>
-		{% if object.concept %}
-			<p style="margin:0">
-				<span>Concept:</span>
-				<span class="w3-right">{{ object.concept }}</span>
-			</p>
-		{% endif %}
-		{% if object.caste %}
-			<p style="margin:0">
-				<span>Caste:</span>
-				<span class="w3-right">{{ object.caste }}</span>
-			</p>
-		{% endif %}
-		{% if object.anima %}
-			<p style="margin:0">
-				<span>Anima:</span>
-				<span class="w3-right">{{ object.anima }}</span>
-			</p>
-		{% endif %}
-		{% if object.spiritShape %}
-			<p style="margin:0">
-				<span>Spirit Shape:</span>
-				<span class="w3-right">{{ object.spiritShape }}</span>
-			</p>
-		{% endif %}
-		{% if object.abilitySupernal %}
-			<p style="margin:0">
-				<span>Supernal Ability:</span>
-				<span class="w3-right">{{ object.abilitySupernal }}</span>
-			</p>
-		{% endif %}
-	</div>
+	<p>{{ object.type }}<span style="float: right;">Player: {{ object.player }}</span></p>
+	<h1>{{ object.name }}</h1>
+	{% if object.concept %}
+		<p>Concept<span style="float: right;">{{ object.concept }}</span></p>
+	{% endif %}
+	{% if object.caste %}
+		<p>Caste<span style="float: right;">{{ object.caste }}</span></p>
+	{% endif %}
+	{% if object.anima %}
+		<p>Anima<span style="float: right;">{{ object.anima }}</span></p>
+	{% endif %}
+	{% if object.spiritShape %}
+		<p>Spirit Shape<span style="float: right;">{{ object.spiritShape }}</span></p>
+	{% endif %}
+	{% if object.tell %}
+		<p>Tell<span style="float: right;">{{ object.tell }}</span></p>
+	{% endif %}
+	{% if object.abilitySupernal %}
+		<p>Supernal Ability<span style="float: right;">{{ object.abilitySupernal }}</span></p>
+	{% endif %}
 {% endblock %}
 
 {% block abilities %}
-	<div class="w3-large w3-margin-bottom w3-margin-top">
-		<p style="margin:3px" class="fancy w3-center  w3-xlarge">
-			<span class="w3-center"><b>Abilities</b></span>
+		<h2>Abilities</h2>
 		</p>
 		<p style="margin:0" class="accordion w3-display-container w3-row-padding custom-hover-grey custom-hover-text-orange">
 			<span>Archery:</span>
@@ -463,516 +442,534 @@
 		<div class="accordionPanel custom-border-grey w3-border-bottom w3-row-padding">
 			<p style="margin:0;"><i class="fas fa-level-up-alt fa-rotate-90"></i> Description</p>
 		</div>
-	</div>
 {% endblock %}
 
 {% block attributes %}
-	<div class="w3-large w3-margin-bottom w3-margin-top">
-		<p style="margin:3px" class="fancy w3-center  w3-xlarge">
-			<span class="w3-center"><b>Attributes</b></span>
-		</p>
-		<div class="w3-cell-row">
-			<div class="w3-cell w3-third w3-mobile w3-row-padding">
-				<p style="margin:0" class="w3-large w3-center fancy-small">
-					<span>Physical</span>
-				</p>
-				<p style="margin:0" class="w3-display-container w3-row-padding custom-hover-grey custom-hover-text-orange">
-					<span class="w3-hide-medium">Strength:</span>
-					<span class="w3-hide-large w3-hide-small">STR:</span>
-					<span class="w3-medium w3-display-right">
-						{% for dot in object.dotsStrength %}
-							{% if dot %}
-								<i class="fas fa-circle"></i>
-							{% else %}
-								<i class="far fa-circle"></i>
-							{% endif %}
-						{% endfor %}
-						&thinsp;
-					</span>
-				</p>
-				<p style="margin:0" class="w3-display-container w3-row-padding custom-hover-grey custom-hover-text-orange">
-					<span class="w3-hide-medium">Dexterity:</span>
-					<span class="w3-hide-large w3-hide-small">DEX:</span>
-					<span class="w3-medium w3-display-right">
-						{% for dot in object.dotsDexterity %}
-							{% if dot %}
-								<i class="fas fa-circle"></i>
-							{% else %}
-								<i class="far fa-circle"></i>
-							{% endif %}
-						{% endfor %}
-						&thinsp;
-					</span>
-				</p>
-				<p style="margin:0" class="w3-display-container w3-row-padding custom-hover-grey custom-hover-text-orange">
-					<span class="w3-hide-medium">Stamina:</span>
-					<span class="w3-hide-large w3-hide-small">STA:</span>
-					<span class="w3-medium w3-display-right">
-						{% for dot in object.dotsStamina %}
-							{% if dot %}
-								<i class="fas fa-circle"></i>
-							{% else %}
-								<i class="far fa-circle"></i>
-							{% endif %}
-						{% endfor %}
-						&thinsp;
-					</span>
-				</p>
-			</div>
-			<div class="w3-cell w3-third w3-mobile w3-row-padding">
-				<p style="margin:0" class="w3-large w3-center fancy-small">
-					<span>Social</span>
-				</p>
-				<p style="margin:0" class="w3-display-container w3-row-padding custom-hover-grey custom-hover-text-orange">
-					<span class="w3-hide-medium">Charisma:</span>
-					<span class="w3-hide-large w3-hide-small">CHA:</span>
-					<span class="w3-medium w3-display-right">
-						{% for dot in object.dotsCharisma %}
-							{% if dot %}
-								<i class="fas fa-circle"></i>
-							{% else %}
-								<i class="far fa-circle"></i>
-							{% endif %}
-						{% endfor %}
-						&thinsp;
-					</span>
-				</p>
-				<p style="margin:0" class="w3-display-container w3-row-padding custom-hover-grey custom-hover-text-orange">
-					<span class="w3-hide-medium">Manipulation:</span>
-					<span class="w3-hide-large w3-hide-small">MAN:</span>
-					<span class="w3-medium w3-display-right">
-						{% for dot in object.dotsManipulation %}
-							{% if dot %}
-								<i class="fas fa-circle"></i>
-							{% else %}
-								<i class="far fa-circle"></i>
-							{% endif %}
-						{% endfor %}
-						&thinsp;
-					</span>
-				</p>
-				<p style="margin:0" class="w3-display-container w3-row-padding custom-hover-grey custom-hover-text-orange">
-					<span class="w3-hide-medium">Appearance:</span>
-					<span class="w3-hide-large w3-hide-small">APP:</span>
-					<span class="w3-medium w3-display-right">
-						{% for dot in object.dotsAppearance %}
-							{% if dot %}
-								<i class="fas fa-circle"></i>
-							{% else %}
-								<i class="far fa-circle"></i>
-							{% endif %}
-						{% endfor %}
-						&thinsp;
-					</span>
-				</p>
-			</div>
-			<div class="w3-cell w3-third w3-mobile w3-row-padding">
-				<p style="margin:0" class="w3-large w3-center fancy-small">
-					<span>Mental</span>
-				</p>
-				<p style="margin:0" class="w3-display-container w3-row-padding custom-hover-grey custom-hover-text-orange">
-					<span class="w3-hide-medium">Perception:</span>
-					<span class="w3-hide-large w3-hide-small">PER:</span>
-					<span class="w3-medium w3-display-right">
-						{% for dot in object.dotsPerception %}
-							{% if dot %}
-								<i class="fas fa-circle"></i>
-							{% else %}
-								<i class="far fa-circle"></i>
-							{% endif %}
-						{% endfor %}
-						&thinsp;
-					</span>
-				</p>
-				<p style="margin:0" class="w3-display-container w3-row-padding custom-hover-grey custom-hover-text-orange">
-					<span class="w3-hide-medium">Intelligence:</span>
-					<span class="w3-hide-large w3-hide-small">INT:</span>
-					<span class="w3-medium w3-display-right">
-						{% for dot in object.dotsIntelligence %}
-							{% if dot %}
-								<i class="fas fa-circle"></i>
-							{% else %}
-								<i class="far fa-circle"></i>
-							{% endif %}
-						{% endfor %}
-						&thinsp;
-					</span>
-				</p>
-				<p style="margin:0" class="w3-display-container w3-row-padding custom-hover-grey custom-hover-text-orange">
-					<span class="w3-hide-medium">Wits:</span>
-					<span class="w3-hide-large w3-hide-small">WIT:</span>
-					<span class="w3-medium w3-display-right">
-						{% for dot in object.dotsWits %}
-							{% if dot %}
-								<i class="fas fa-circle"></i>
-							{% else %}
-								<i class="far fa-circle"></i>
-							{% endif %}
-						{% endfor %}
-						&thinsp;
-					</span>
-				</p>
-			</div>
+	<h2>Attributes</h2>
+	<div class="w3-cell-row">
+		<div class="w3-cell w3-third w3-mobile w3-row-padding">
+			<p style="margin:0" class="w3-large w3-center fancy-small">
+				<span>Physical</span>
+			</p>
+			<p style="margin:0" class="w3-display-container w3-row-padding custom-hover-grey custom-hover-text-orange">
+				<span class="w3-hide-medium">Strength:</span>
+				<span class="w3-hide-large w3-hide-small">STR:</span>
+				<span class="w3-medium w3-display-right">
+					{% for dot in object.dotsStrength %}
+						{% if dot %}
+							<i class="fas fa-circle"></i>
+						{% else %}
+							<i class="far fa-circle"></i>
+						{% endif %}
+					{% endfor %}
+					&thinsp;
+				</span>
+			</p>
+			<p style="margin:0" class="w3-display-container w3-row-padding custom-hover-grey custom-hover-text-orange">
+				<span class="w3-hide-medium">Dexterity:</span>
+				<span class="w3-hide-large w3-hide-small">DEX:</span>
+				<span class="w3-medium w3-display-right">
+					{% for dot in object.dotsDexterity %}
+						{% if dot %}
+							<i class="fas fa-circle"></i>
+						{% else %}
+							<i class="far fa-circle"></i>
+						{% endif %}
+					{% endfor %}
+					&thinsp;
+				</span>
+			</p>
+			<p style="margin:0" class="w3-display-container w3-row-padding custom-hover-grey custom-hover-text-orange">
+				<span class="w3-hide-medium">Stamina:</span>
+				<span class="w3-hide-large w3-hide-small">STA:</span>
+				<span class="w3-medium w3-display-right">
+					{% for dot in object.dotsStamina %}
+						{% if dot %}
+							<i class="fas fa-circle"></i>
+						{% else %}
+							<i class="far fa-circle"></i>
+						{% endif %}
+					{% endfor %}
+					&thinsp;
+				</span>
+			</p>
+		</div>
+		<div class="w3-cell w3-third w3-mobile w3-row-padding">
+			<p style="margin:0" class="w3-large w3-center fancy-small">
+				<span>Social</span>
+			</p>
+			<p style="margin:0" class="w3-display-container w3-row-padding custom-hover-grey custom-hover-text-orange">
+				<span class="w3-hide-medium">Charisma:</span>
+				<span class="w3-hide-large w3-hide-small">CHA:</span>
+				<span class="w3-medium w3-display-right">
+					{% for dot in object.dotsCharisma %}
+						{% if dot %}
+							<i class="fas fa-circle"></i>
+						{% else %}
+							<i class="far fa-circle"></i>
+						{% endif %}
+					{% endfor %}
+					&thinsp;
+				</span>
+			</p>
+			<p style="margin:0" class="w3-display-container w3-row-padding custom-hover-grey custom-hover-text-orange">
+				<span class="w3-hide-medium">Manipulation:</span>
+				<span class="w3-hide-large w3-hide-small">MAN:</span>
+				<span class="w3-medium w3-display-right">
+					{% for dot in object.dotsManipulation %}
+						{% if dot %}
+							<i class="fas fa-circle"></i>
+						{% else %}
+							<i class="far fa-circle"></i>
+						{% endif %}
+					{% endfor %}
+					&thinsp;
+				</span>
+			</p>
+			<p style="margin:0" class="w3-display-container w3-row-padding custom-hover-grey custom-hover-text-orange">
+				<span class="w3-hide-medium">Appearance:</span>
+				<span class="w3-hide-large w3-hide-small">APP:</span>
+				<span class="w3-medium w3-display-right">
+					{% for dot in object.dotsAppearance %}
+						{% if dot %}
+							<i class="fas fa-circle"></i>
+						{% else %}
+							<i class="far fa-circle"></i>
+						{% endif %}
+					{% endfor %}
+					&thinsp;
+				</span>
+			</p>
+		</div>
+		<div class="w3-cell w3-third w3-mobile w3-row-padding">
+			<p style="margin:0" class="w3-large w3-center fancy-small">
+				<span>Mental</span>
+			</p>
+			<p style="margin:0" class="w3-display-container w3-row-padding custom-hover-grey custom-hover-text-orange">
+				<span class="w3-hide-medium">Perception:</span>
+				<span class="w3-hide-large w3-hide-small">PER:</span>
+				<span class="w3-medium w3-display-right">
+					{% for dot in object.dotsPerception %}
+						{% if dot %}
+							<i class="fas fa-circle"></i>
+						{% else %}
+							<i class="far fa-circle"></i>
+						{% endif %}
+					{% endfor %}
+					&thinsp;
+				</span>
+			</p>
+			<p style="margin:0" class="w3-display-container w3-row-padding custom-hover-grey custom-hover-text-orange">
+				<span class="w3-hide-medium">Intelligence:</span>
+				<span class="w3-hide-large w3-hide-small">INT:</span>
+				<span class="w3-medium w3-display-right">
+					{% for dot in object.dotsIntelligence %}
+						{% if dot %}
+							<i class="fas fa-circle"></i>
+						{% else %}
+							<i class="far fa-circle"></i>
+						{% endif %}
+					{% endfor %}
+					&thinsp;
+				</span>
+			</p>
+			<p style="margin:0" class="w3-display-container w3-row-padding custom-hover-grey custom-hover-text-orange">
+				<span class="w3-hide-medium">Wits:</span>
+				<span class="w3-hide-large w3-hide-small">WIT:</span>
+				<span class="w3-medium w3-display-right">
+					{% for dot in object.dotsWits %}
+						{% if dot %}
+							<i class="fas fa-circle"></i>
+						{% else %}
+							<i class="far fa-circle"></i>
+						{% endif %}
+					{% endfor %}
+					&thinsp;
+				</span>
+			</p>
 		</div>
 	</div>
 {% endblock %}
 
 {% block specialities %}
-	<div class="w3-large w3-margin-bottom w3-margin-top">
-		<p style="margin:3px" class="fancy w3-center  w3-xlarge">
-			<span class="w3-center"><b>Specialities</b></span>
-		</p>
-		{% if object.specialitySet %}
-			{% for speciality in object.specialitySet %}
-				<p style="margin:0" class="w3-row-padding custom-hover-grey custom-hover-text-orange">
-					<span>{{ speciality }}</span>
-				</p>
-			{% endfor %}
-		{% else %}
-			<p style="margin:0">No specialities found.</p>
-		{% endif %}
-	</div>
+	<h2>Specialities</h2>
+	{% if object.specialitySet %}
+		{% for speciality in object.specialitySet %}
+			<p class="hover-grey accordion"><i class="far fa-square"></i> {{ speciality }}</p>
+			<p class="accordionPanel"><i class="fas fa-level-up-alt fa-rotate-90"></i>
+				{% if speciality.description %}
+					{{ speciality.description }}
+				{% else %}
+					No description found.
+				{% endif %}
+			</p>
+		{% endfor %}
+	{% else %}
+		<p style="margin:0">No specialities found.</p>
+	{% endif %}
 {% endblock %}
 
 {% block willpower %}
-	<div class="w3-large w3-margin-bottom w3-margin-top" style="min-width:300px">
-		<p style="margin:0px" class="fancy w3-center  w3-xlarge">
-			<span class="w3-center"><b>Willpower</b></span>
-		</p>
-		<p style="margin:10px;" class="w3-large w3-center">
-			<span>
-				{% for dot in object.dotsTriWillpower %}
-					{% if dot == 2 %}
-						<i class="fas fa-circle"></i>
-					{% elif dot == 1 %}
-						<i class="far fa-dot-circle"></i>
-					{% else %}
-						<i class="far fa-circle"></i>
-					{% endif %}
-				{% endfor %}
-			</span>
-		</p>
-	</div>
+	<h2>Willpower</h2>
+	<p style="margin:10px;" class="w3-large w3-center">
+		<span>
+			{% for dot in object.dotsTriWillpower %}
+				{% if dot == 2 %}
+					<i class="fas fa-circle"></i>
+				{% elif dot == 1 %}
+					<i class="far fa-dot-circle"></i>
+				{% else %}
+					<i class="far fa-circle"></i>
+				{% endif %}
+			{% endfor %}
+		</span>
+	</p>
 {% endblock %}
 
 {% block essence %}
-	<div class="w3-large w3-margin-bottom w3-margin-top">
-		<p style="margin:0px" class="fancy w3-center  w3-xlarge">
-			<span class="w3-center"><b>Essence</b></span>
-		</p>
-		<p style="margin:10px;" class="w3-xlarge w3-center">
-			<span>
-				{% for dot in object.dotsEssence %}
-					{% if dot %}
-						<i class="fas fa-circle"></i>
-					{% else %}
-						<i class="far fa-circle"></i>
-					{% endif %}
-				{% endfor %}
-			</span>
-		</p>
-		{% if object.type is not "Mortal" %}
-		<div class="w3-container" style="text-align:center;">
-			<div style="max-width:200px; min-width:200px; display:inline-block; text-align:left;">
-				<p style="margin:0">
-					<span>Personal:</span>
-					<span class="w3-right">{{ object.motesPersonal }}/{{ object.motesPersonalMax }}</span>
-				</p>
-				<p style="margin:0">
-					<span>Peripheral:</span>
-					<span class="w3-right">{{ object.motesPeripheral }}/{{ object.motesPeripheralMax }}</span>
-				</p>
-				<p style="margin:0">
-					<span>Personal:</span>
-					<span class="w3-right">{{ object.motesCommitted }}</span>
-				</p>
-			</div>
+	<h2>Essence</h2>
+	<p style="margin:10px;" class="w3-xlarge w3-center">
+		<span>
+			{% for dot in object.dotsEssence %}
+				{% if dot %}
+					<i class="fas fa-circle"></i>
+				{% else %}
+					<i class="far fa-circle"></i>
+				{% endif %}
+			{% endfor %}
+		</span>
+	</p>
+	{% if object.type is not "Mortal" %}
+	<div class="w3-container" style="text-align:center;">
+		<div style="max-width:200px; min-width:200px; display:inline-block; text-align:left;">
+			<p style="margin:0">
+				<span>Personal:</span>
+				<span class="w3-right">{{ object.motesPersonal }}/{{ object.motesPersonalMax }}</span>
+			</p>
+			<p style="margin:0">
+				<span>Peripheral:</span>
+				<span class="w3-right">{{ object.motesPeripheral }}/{{ object.motesPeripheralMax }}</span>
+			</p>
+			<p style="margin:0">
+				<span>Personal:</span>
+				<span class="w3-right">{{ object.motesCommitted }}</span>
+			</p>
 		</div>
-		{% endif %}
 	</div>
+	{% endif %}
 {% endblock %}
 
 {% block merits %}
-	<div class="w3-large w3-margin-bottom w3-margin-top">
-		<p style="margin:3px" class="fancy w3-center  w3-xlarge">
-			<span class="w3-center"><b>Merits</b></span>
-		</p>
-		{% if object.meritSet %}
-			{% for merit in object.meritSet %}
-				<p style="margin:0" class="w3-row-padding custom-hover-grey custom-hover-text-orange w3-display-container">
-					<span>{{ merit }}</span>
-					<span class="w3-display-right">
-						{% for dot in merit.dotsDisplay %}
-							{% if dot %}
-								<i class="fas fa-circle"></i>
-							{% else %}
-								<i class="far fa-circle"></i>
-							{% endif %}
-						{% endfor %}
-						&thinsp;
-					</span>
-				</p>
-			{% endfor %}
-		{% else %}
-			<p>No merits found.</p>
-		{% endif %}
-	</div>
+	<h2>Merits</h2>
+	{% if object.meritSet %}
+		{% for merit in object.meritSet %}
+			<p style="margin:0" class="w3-row-padding custom-hover-grey custom-hover-text-orange w3-display-container">
+				<span>{{ merit }}</span>
+				<span class="w3-display-right">
+					{% for dot in merit.dotsDisplay %}
+						{% if dot %}
+							<i class="fas fa-circle"></i>
+						{% else %}
+							<i class="far fa-circle"></i>
+						{% endif %}
+					{% endfor %}
+					&thinsp;
+				</span>
+			</p>
+		{% endfor %}
+	{% else %}
+		<p>No merits found.</p>
+	{% endif %}
 {% endblock %}
 
 {% block limit %}
-	<div class="w3-large w3-margin-bottom w3-margin-top">
-		<p style="margin:3px" class="fancy w3-center  w3-xlarge">
-			<span class="w3-center"><b>Limit</b></span>
-		</p>
-		<p style="margin:10px;" class="w3-large w3-center">
-			<span>
-				{% for dot in object.dotsLimit %}
-					{% if dot %}
-						<i class="fas fa-circle"></i>
-					{% else %}
-						<i class="far fa-circle"></i>
-					{% endif %}
-				{% endfor %}
-			</span>
-		</p>
-		<p class="w3-center">
-			{{ object.limitTrigger }}
-		</p>
-	</div>
+	<h2>Limit</h2>
+	<p style="margin:10px;" class="w3-large w3-center">
+		<span>
+			{% for dot in object.dotsLimit %}
+				{% if dot %}
+					<i class="fas fa-circle"></i>
+				{% else %}
+					<i class="far fa-circle"></i>
+				{% endif %}
+			{% endfor %}
+		</span>
+	</p>
+	<p class="w3-center">
+		{{ object.limitTrigger }}
+	</p>
 {% endblock %}
 
 {% block experience %}
-	<div class="w3-large w3-margin-bottom w3-margin-top">
-		<div class="w3-cell-row">
-			<div class="w3-cell w3-mobile">
-				<p style="margin:3px" class="fancy w3-center w3-xlarge">
-					<span class="w3-center"><b>Experience</b></span>
-				</p>
-				<div class="w3-cell-row">
-					<div class="w3-cell w3-row-padding custom-hover-grey custom-hover-text-orange">
-						<span>Current:</span>
-						<span class="w3-right">{{ object.experience }}</span>
-					</div>
-					<div class="w3-cell w3-row-padding vl w3-hide-small">
-					</div>
-					<div class="w3-cell w3-row-padding custom-hover-grey custom-hover-text-orange">
-						<span>Total:</span>
-						<span class="w3-right">{{ object.experienceTotal }}</span>
-					</div>
+	<h2>Experience</h2>
+	<div class="w3-cell-row">
+		<div class="w3-cell w3-mobile">
+			<p style="margin:3px" class="fancy w3-center w3-xlarge">
+				<span class="w3-center"><b>Experience</b></span>
+			</p>
+			<div class="w3-cell-row">
+				<div class="w3-cell w3-row-padding custom-hover-grey custom-hover-text-orange">
+					<span>Current:</span>
+					<span class="w3-right">{{ object.experience }}</span>
+				</div>
+				<div class="w3-cell w3-row-padding vl w3-hide-small">
+				</div>
+				<div class="w3-cell w3-row-padding custom-hover-grey custom-hover-text-orange">
+					<span>Total:</span>
+					<span class="w3-right">{{ object.experienceTotal }}</span>
 				</div>
 			</div>
-			{% if object.type is not "Mortal" %}
-			<div class="w3-cell w3-row-padding w3-hide-small">
-			</div>
-			<div class="w3-cell w3-mobile">
-				<p style="margin:3px" class="fancy w3-center w3-xlarge">
-					<span class="w3-center"><b>Exalted Experience</b></span>
-				</p>
-				<div class="w3-cell-row">
-					<div class="w3-cell w3-row-padding custom-hover-grey custom-hover-text-orange">
-						<span>Current:</span>
-						<span class="w3-right">{{ object.experienceExalted }}</span>
-					</div>
-					<div class="w3-cell w3-row-padding vl w3-hide-small">
-					</div>
-					<div class="w3-cell w3-row-padding custom-hover-grey custom-hover-text-orange">
-						<span>Total:</span>
-						<span class="w3-right">{{ object.experienceExaltedTotal }}</span>
-					</div>
-				</div>
-			</div>
-			{% endif %}
 		</div>
+		{% if object.type is not "Mortal" %}
+		<div class="w3-cell w3-row-padding w3-hide-small">
+		</div>
+		<div class="w3-cell w3-mobile">
+			<p style="margin:3px" class="fancy w3-center w3-xlarge">
+				<span class="w3-center"><b>Exalted Experience</b></span>
+			</p>
+			<div class="w3-cell-row">
+				<div class="w3-cell w3-row-padding custom-hover-grey custom-hover-text-orange">
+					<span>Current:</span>
+					<span class="w3-right">{{ object.experienceExalted }}</span>
+				</div>
+				<div class="w3-cell w3-row-padding vl w3-hide-small">
+				</div>
+				<div class="w3-cell w3-row-padding custom-hover-grey custom-hover-text-orange">
+					<span>Total:</span>
+					<span class="w3-right">{{ object.experienceExaltedTotal }}</span>
+				</div>
+			</div>
+		</div>
+		{% endif %}
 	</div>
 {% endblock %}
 
 {% block weapons_armor %}
-	<div class="w3-large w3-margin-bottom w3-margin-top">
-		<p style="margin:3px" class="fancy w3-center  w3-xlarge">
-			<span class="w3-center"><b>Weapons & Armor</b></span>
-		</p>
-		<table class="w3-table" style="line-height:11px">
-			<tr class="w3-border-bottom custom-border-grey">
-				<th><b>Weapon</b></th>
-				<th>ACC</th>
-				<th>DAM</th>
-				<th>DEF</th>
-				<th>OVW</th>
-				<th>ATT</th>
-			</tr>
-			{% if object.itemWeaponSet %}
-				{% for weapon in object.itemWeaponSet %}
-					<tr class="trAccordion custom-hover-grey custom-hover-text-orange">
-						<td style="white-space: nowrap;">{{ weapon.name }}</td>
-						{% if weapon.rangeClose %}
-							<td>{{ weapon.rangeClose }}/{{ weapon.rangeShort }}/{{ weapon.rangeMedium }}/{{ weapon.rangeLong }}/{{ weapon.rangeExtreme }}</td>
-						{% else %}
-						<td>{{ weapon.accuracy }}</td>
-						{% endif %}
-						<td>{{ weapon.damage }}</td>
-						<td>{{ weapon.defense }}</td>
-						<td>{{ weapon.overwhelming }}</td>
-						<td>{{ weapon.attunement }}</td>
-					</tr>
-					<tr class"accordionRow" style="display:none;"><td class="w3-border-bottom custom-border-grey" colspan="6">
-							<i class="fas fa-level-up-alt fa-rotate-90"></i> {{ weapon.description }} Describe a really long sentence that will definitely overflow the bounds of the single cell
-					</td></tr>
-				{% endfor %}
-			{% else %}
-					<tr><td>No weapons found.</td></tr>
-			{% endif %}
-		</table>
-		<br>
-		<table class="w3-table" style="line-height:11px">
-			<tr class="w3-border-bottom custom-border-grey">
-				<th><b>Armor</b></th>
-				<th>SOAK</th>
-				<th>HRD</th>
-				<th>MP</th>
-				<th>ATT</th>
-			</tr>
-			{% if object.itemArmorSet %}
-				{% for armor in object.itemArmorSet %}
-					<tr class="custom-hover-grey custom-hover-text-orange">
-						<td>{{ armor.name }}</td>
-						<td>{{ armor.soak }}</td>
-						<td>{{ armor.hardness }}</td>
-						<td>{{ armor.mobilityPenalty }}</td>
-						<td>{{ armor.attunement }}</td>
-					</tr>
-				{% endfor %}
-			{% else %}
-				<tr><td>No armor found.</td></tr>
-			{% endif %}
-		</table>
-	</div>
+	<h2>Weapons & Armor</h2>
+	<p style="margin:3px" class="fancy w3-center  w3-xlarge">
+		<span class="w3-center"><b>Weapons & Armor</b></span>
+	</p>
+	<table class="w3-table" style="line-height:11px">
+		<tr class="w3-border-bottom custom-border-grey">
+			<th><b>Weapon</b></th>
+			<th>ACC</th>
+			<th>DAM</th>
+			<th>DEF</th>
+			<th>OVW</th>
+			<th>ATT</th>
+		</tr>
+		{% if object.itemWeaponSet %}
+			{% for weapon in object.itemWeaponSet %}
+				<tr class="trAccordion custom-hover-grey custom-hover-text-orange">
+					<td style="white-space: nowrap;">{{ weapon.name }}</td>
+					{% if weapon.rangeClose %}
+						<td>{{ weapon.rangeClose }}/{{ weapon.rangeShort }}/{{ weapon.rangeMedium }}/{{ weapon.rangeLong }}/{{ weapon.rangeExtreme }}</td>
+					{% else %}
+					<td>{{ weapon.accuracy }}</td>
+					{% endif %}
+					<td>{{ weapon.damage }}</td>
+					<td>{{ weapon.defense }}</td>
+					<td>{{ weapon.overwhelming }}</td>
+					<td>{{ weapon.attunement }}</td>
+				</tr>
+				<tr class"accordionRow" style="display:none;"><td class="w3-border-bottom custom-border-grey" colspan="6">
+						<i class="fas fa-level-up-alt fa-rotate-90"></i> {{ weapon.description }} Describe a really long sentence that will definitely overflow the bounds of the single cell
+				</td></tr>
+			{% endfor %}
+		{% else %}
+				<tr><td>No weapons found.</td></tr>
+		{% endif %}
+	</table>
+	<br>
+	<table class="w3-table" style="line-height:11px">
+		<tr class="w3-border-bottom custom-border-grey">
+			<th><b>Armor</b></th>
+			<th>SOAK</th>
+			<th>HRD</th>
+			<th>MP</th>
+			<th>ATT</th>
+		</tr>
+		{% if object.itemArmorSet %}
+			{% for armor in object.itemArmorSet %}
+				<tr class="custom-hover-grey custom-hover-text-orange">
+					<td>{{ armor.name }}</td>
+					<td>{{ armor.soak }}</td>
+					<td>{{ armor.hardness }}</td>
+					<td>{{ armor.mobilityPenalty }}</td>
+					<td>{{ armor.attunement }}</td>
+				</tr>
+			{% endfor %}
+		{% else %}
+			<tr><td>No armor found.</td></tr>
+		{% endif %}
+	</table>
 {% endblock %}
 
 {% block health_defense %}
-	<div class="w3-large w3-margin-bottom w3-margin-top">
-		<p style="margin:3px" class="fancy w3-center  w3-xlarge">
-			<span class="w3-center"><b>Health & Defense</b></span>
-		</p>
-		<div class="w3-cell-row">
-			<div class="w3-cell w3-mobile custom-hover-grey custom-hover-text-orange w3-row-padding">
-				<span>Soak (N/A/T):</span>
-				<span class="w3-right">{{ object.soakNatural }}/{{ object.soakArmored }}/{{ object.soakTotal }}</span>
-			</div>
-			<div class="w3-cell w3-row-padding vl w3-hide-small">
-			</div>
-			<div class="w3-cell w3-mobile custom-hover-grey custom-hover-text-orange w3-row-padding">
-				<span>Hardness:</span>
-				<span class="w3-right">{{ object.hardness }}</span>
-			</div>
-			<div class="w3-cell w3-row-padding vl w3-hide-small">
-			</div>
-			<div class="w3-cell w3-mobile custom-hover-grey custom-hover-text-orange w3-row-padding">
-				<span>Guile:</span>
-				<span class="w3-right">{{ object.guile }}</span>
-			</div>
-			<div class="w3-cell w3-row-padding vl w3-hide-small">
-			</div>
-			<div class="w3-cell w3-mobile custom-hover-grey custom-hover-text-orange w3-row-padding">
-				<span>Resolve:</span>
-				<span class="w3-right">{{ object.resolve }}</span>
-			</div>
-			<div class="w3-cell w3-row-padding vl w3-hide-small">
-			</div>
-			<div class="w3-cell w3-mobile custom-hover-grey custom-hover-text-orange w3-row-padding">
-				<span>Rush:</span>
-				<span class="w3-right">{{ object.rush }}</span>
-			</div>
-			<div class="w3-cell w3-row-padding vl w3-hide-small">
-			</div>
-			<div class="w3-cell w3-mobile custom-hover-grey custom-hover-text-orange w3-row-padding">
-				<span>Evasion:</span>
-				<span class="w3-right">{{ object.evasion }}</span>
-			</div>
-			<div class="w3-cell w3-row-padding vl w3-hide-small">
-			</div>
-			<div class="w3-cell w3-mobile custom-hover-grey custom-hover-text-orange w3-row-padding">
-				<span>Disengage:</span>
-				<span class="w3-right">{{ object.disengage }}</span>
-			</div>
-			<div class="w3-cell w3-row-padding vl w3-hide-small">
-			</div>
-			<div class="w3-cell w3-mobile custom-hover-grey custom-hover-text-orange w3-row-padding">
-				<span>Join Battle:</span>
-				<span class="w3-right">{{ object.joinBattle }}</span>
+	<h2>Health & Defense</h2>
+	<p style="margin:3px" class="fancy w3-center  w3-xlarge">
+		<span class="w3-center"><b>Health & Defense</b></span>
+	</p>
+	<div class="w3-cell-row">
+		<div class="w3-cell w3-mobile custom-hover-grey custom-hover-text-orange w3-row-padding">
+			<span>Soak (N/A/T):</span>
+			<span class="w3-right">{{ object.soakNatural }}/{{ object.soakArmored }}/{{ object.soakTotal }}</span>
+		</div>
+		<div class="w3-cell w3-row-padding vl w3-hide-small">
+		</div>
+		<div class="w3-cell w3-mobile custom-hover-grey custom-hover-text-orange w3-row-padding">
+			<span>Hardness:</span>
+			<span class="w3-right">{{ object.hardness }}</span>
+		</div>
+		<div class="w3-cell w3-row-padding vl w3-hide-small">
+		</div>
+		<div class="w3-cell w3-mobile custom-hover-grey custom-hover-text-orange w3-row-padding">
+			<span>Guile:</span>
+			<span class="w3-right">{{ object.guile }}</span>
+		</div>
+		<div class="w3-cell w3-row-padding vl w3-hide-small">
+		</div>
+		<div class="w3-cell w3-mobile custom-hover-grey custom-hover-text-orange w3-row-padding">
+			<span>Resolve:</span>
+			<span class="w3-right">{{ object.resolve }}</span>
+		</div>
+		<div class="w3-cell w3-row-padding vl w3-hide-small">
+		</div>
+		<div class="w3-cell w3-mobile custom-hover-grey custom-hover-text-orange w3-row-padding">
+			<span>Rush:</span>
+			<span class="w3-right">{{ object.rush }}</span>
+		</div>
+		<div class="w3-cell w3-row-padding vl w3-hide-small">
+		</div>
+		<div class="w3-cell w3-mobile custom-hover-grey custom-hover-text-orange w3-row-padding">
+			<span>Evasion:</span>
+			<span class="w3-right">{{ object.evasion }}</span>
+		</div>
+		<div class="w3-cell w3-row-padding vl w3-hide-small">
+		</div>
+		<div class="w3-cell w3-mobile custom-hover-grey custom-hover-text-orange w3-row-padding">
+			<span>Disengage:</span>
+			<span class="w3-right">{{ object.disengage }}</span>
+		</div>
+		<div class="w3-cell w3-row-padding vl w3-hide-small">
+		</div>
+		<div class="w3-cell w3-mobile custom-hover-grey custom-hover-text-orange w3-row-padding">
+			<span>Join Battle:</span>
+			<span class="w3-right">{{ object.joinBattle }}</span>
+		</div>
+	</div>
+	<div class="w3-display-container w3-margin-top">
+		<div class="w3-display-topmiddle">
+			<div class="w3-row">
+				{% for level,dot in object.healthDots %}
+					<div class="w3-cell">
+						<p style="margin:0">
+							{% if dot %}
+								&thinsp;
+								<i class="fas fa-circle"></i>
+								&thinsp;
+							{% else %}
+								&thinsp;
+								<i class="far fa-circle"></i>
+								&thinsp;
+							{% endif %}
+						</p>
+						<p style="margin:0; text-align:center;">
+							&thinsp;
+							{{ level }}
+							&thinsp;
+						</p>
+					</div>
+				{% endfor %}
 			</div>
 		</div>
-		<div class="w3-display-container w3-margin-top">
-			<div class="w3-display-topmiddle">
-				<div class="w3-row">
-					{% for level,dot in object.healthDots %}
-						<div class="w3-cell">
-							<p style="margin:0">
-								{% if dot %}
-									&thinsp;
-									<i class="fas fa-circle"></i>
-									&thinsp;
-								{% else %}
-									&thinsp;
-									<i class="far fa-circle"></i>
-									&thinsp;
-								{% endif %}
-							</p>
-							<p style="margin:0; text-align:center;">
-								&thinsp;
-								{{ level }}
-								&thinsp;
-							</p>
-						</div>
-					{% endfor %}
-				</div>
-			</div>
-			<br>
-			<br>
-		</div>
+		<br>
+		<br>
 	</div>
 {% endblock %}
 
 {% block intimacies %}
-	<div class="w3-large w3-margin-bottom w3-margin-top">
-		<p style="margin:3px" class="fancy w3-center  w3-xlarge">
-			<span class="w3-center"><b>Intimacies</b></span>
-		</p>
-		<table class="w3-table" style="line-height:11px">
-			<tr class="w3-border-bottom custom-border-grey">
-				<th>Intimacy</th>
-				<th>Target</th>
-				<th>Intensity</th>
-			</tr>
-			{% if object.intimacy_set.all %}
-				{% for tie in object.intimacy_set.all %}
-					<tr class="custom-hover-grey custom-hover-text-orange">
-						<td>{{ tie.description }}</td>
-						<td>{{ tie.target }}</td>
-						<td>{{ tie.intensity }}</td>
-					</tr>
-				{% endfor %}
-			{% else %}
-					<tr><td>No intimacies found.</td></tr>
-			{% endif %}
-		</table>
-	</div>
+	<h2>Intimacies</h2>
+	<p style="margin:3px" class="fancy w3-center  w3-xlarge">
+		<span class="w3-center"><b>Intimacies</b></span>
+	</p>
+	<table class="w3-table" style="line-height:11px">
+		<tr class="w3-border-bottom custom-border-grey">
+			<th>Intimacy</th>
+			<th>Target</th>
+			<th>Intensity</th>
+		</tr>
+		{% if object.intimacy_set.all %}
+			{% for tie in object.intimacy_set.all %}
+				<tr class="custom-hover-grey custom-hover-text-orange">
+					<td>{{ tie.description }}</td>
+					<td>{{ tie.target }}</td>
+					<td>{{ tie.intensity }}</td>
+				</tr>
+			{% endfor %}
+		{% else %}
+				<tr><td>No intimacies found.</td></tr>
+		{% endif %}
+	</table>
 {% endblock %}
 
 {% block charms %}
-	<div class="w3-large w3-margin-bottom w3-margin-top">
-		<p style="margin:3px" class="fancy w3-center  w3-xlarge">
-			<span class="w3-center"><b>Charms</b></span>
-		</p>
+	<h2>Charms</h2>
+	<p style="margin:3px" class="fancy w3-center  w3-xlarge">
+		<span class="w3-center"><b>Charms</b></span>
+	</p>
+	<table class="w3-table" style="line-height:11px">
+		<tr class="w3-border-bottom custom-border-grey">
+			<th>Charm</th>
+			<th>Type</th>
+			<th>Duration</th>
+			<th>Keywords</th>
+			<th>Description</th>
+		</tr>
+		{% if object.charmSet %}
+			{% for charm in object.charmSet %}
+				<tr class="custom-hover-grey custom-hover-text-orange">
+					<td>{{ charm.name }}</td>
+					<td>{{ charm.charmType }}</td>
+					<td>{{ charm.duration }}</td>
+					<td>{{ charm.keywords }}</td>
+					<td>{{ charm.description }}</td>
+				</tr>
+			{% endfor %}
+		{% else %}
+			<tr><td>No charms found.</td><tr>
+		{% endif %}
+	</table>
+	{% if object.lunarShapeSet %}
+		<br>
 		<table class="w3-table" style="line-height:11px">
 			<tr class="w3-border-bottom custom-border-grey">
-				<th>Charm</th>
+				<th>Shape</th>
+				<th>Type</th>
+				<th>Size</th>
+				<th>Description</th>
+			</tr>
+				{% for charm in object.lunarShapeSet %}
+					<tr class="custom-hover-grey custom-hover-text-orange">
+						<td>{{ charm.name }}</td>
+						<td>{{ charm.shapeType }}</td>
+						<td>{{ charm.size }}</td>
+						<td>{{ charm.description }}</td>
+					</tr>
+				{% endfor %}
+		</table>
+	{% endif %}
+	{% if object.evocationSet %}
+		<br>
+		<table class="w3-table" style="line-height:11px">
+			<tr class="w3-border-bottom custom-border-grey">
+				<th>Evocation</th>
 				<th>Type</th>
 				<th>Duration</th>
 				<th>Keywords</th>
 				<th>Description</th>
 			</tr>
-			{% if object.charmSet %}
-				{% for charm in object.charmSet %}
+				{% for charm in object.evocationSet %}
 					<tr class="custom-hover-grey custom-hover-text-orange">
 						<td>{{ charm.name }}</td>
 						<td>{{ charm.charmType }}</td>
@@ -981,94 +978,50 @@
 						<td>{{ charm.description }}</td>
 					</tr>
 				{% endfor %}
-			{% else %}
-				<tr><td>No charms found.</td><tr>
-			{% endif %}
 		</table>
-		{% if object.lunarShapeSet %}
-			<br>
-			<table class="w3-table" style="line-height:11px">
-				<tr class="w3-border-bottom custom-border-grey">
-					<th>Shape</th>
-					<th>Type</th>
-					<th>Size</th>
-					<th>Description</th>
-				</tr>
-					{% for charm in object.lunarShapeSet %}
-						<tr class="custom-hover-grey custom-hover-text-orange">
-							<td>{{ charm.name }}</td>
-							<td>{{ charm.shapeType }}</td>
-							<td>{{ charm.size }}</td>
-							<td>{{ charm.description }}</td>
-						</tr>
-					{% endfor %}
-			</table>
-		{% endif %}
-		{% if object.evocationSet %}
-			<br>
-			<table class="w3-table" style="line-height:11px">
-				<tr class="w3-border-bottom custom-border-grey">
-					<th>Evocation</th>
-					<th>Type</th>
-					<th>Duration</th>
-					<th>Keywords</th>
-					<th>Description</th>
-				</tr>
-					{% for charm in object.evocationSet %}
-						<tr class="custom-hover-grey custom-hover-text-orange">
-							<td>{{ charm.name }}</td>
-							<td>{{ charm.charmType }}</td>
-							<td>{{ charm.duration }}</td>
-							<td>{{ charm.keywords }}</td>
-							<td>{{ charm.description }}</td>
-						</tr>
-					{% endfor %}
-			</table>
-		{% endif %}
-		{% if object.martialArtSet %}
-			<br>
-			<table class="w3-table" style="line-height:11px">
-				<tr class="w3-border-bottom custom-border-grey">
-					<th>Charm</th>
-					<th>Type</th>
-					<th>Duration</th>
-					<th>Keywords</th>
-					<th>Description</th>
-				</tr>
-					{% for charm in object.martialArtSet %}
-						<tr class="custom-hover-grey custom-hover-text-orange">
-							<td>{{ charm.name }}</td>
-							<td>{{ charm.charmType }}</td>
-							<td>{{ charm.duration }}</td>
-							<td>{{ charm.keywords }}</td>
-							<td>{{ charm.description }}</td>
-						</tr>
-					{% endfor %}
-			</table>
-		{% endif %}
-	</div>
+	{% endif %}
+	{% if object.martialArtSet %}
+		<br>
+		<table class="w3-table" style="line-height:11px">
+			<tr class="w3-border-bottom custom-border-grey">
+				<th>Charm</th>
+				<th>Type</th>
+				<th>Duration</th>
+				<th>Keywords</th>
+				<th>Description</th>
+			</tr>
+				{% for charm in object.martialArtSet %}
+					<tr class="custom-hover-grey custom-hover-text-orange">
+						<td>{{ charm.name }}</td>
+						<td>{{ charm.charmType }}</td>
+						<td>{{ charm.duration }}</td>
+						<td>{{ charm.keywords }}</td>
+						<td>{{ charm.description }}</td>
+					</tr>
+				{% endfor %}
+		</table>
+	{% endif %}
 {% endblock %}
 
 {% block items %}
-	<div class="w3-large w3-margin-bottom w3-margin-top">
-		<p style="margin:3px" class="fancy w3-center  w3-xlarge">
-			<span class="w3-center"><b>Inventory</b></span>
-		</p>
-		<table class="w3-table" style="line-height:11px">
-			<tr class="w3-border-bottom custom-border-grey">
-				<th>Item</th>
-				<th>Description</th>
-			</tr>
-			{% if object.itemSet %}
-				{% for item in object.itemSet %}
-					<tr class="custom-hover-grey custom-hover-text-orange">
-						<td>{{ item.name }}</td>
-						<td>{{ item.description }}</td>
-					</tr>
-				{% endfor %}
-			{% else %}
-				<tr><td>No items found.</td><tr>
-			{% endif %}
-		</table>
-	</div>
+	<h2>Items</h2>
+	<p style="margin:3px" class="fancy w3-center  w3-xlarge">
+		<span class="w3-center"><b>Inventory</b></span>
+	</p>
+	<table class="w3-table" style="line-height:11px">
+		<tr class="w3-border-bottom custom-border-grey">
+			<th>Item</th>
+			<th>Description</th>
+		</tr>
+		{% if object.itemSet %}
+			{% for item in object.itemSet %}
+				<tr class="custom-hover-grey custom-hover-text-orange">
+					<td>{{ item.name }}</td>
+					<td>{{ item.description }}</td>
+				</tr>
+			{% endfor %}
+		{% else %}
+			<tr><td>No items found.</td><tr>
+		{% endif %}
+	</table>
 {% endblock %}
